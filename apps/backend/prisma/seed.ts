@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import { PRODUCT_CATEGORIES } from '@njiani/shared';
