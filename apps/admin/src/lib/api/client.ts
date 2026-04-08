@@ -22,87 +22,112 @@ export type PaginatedResponse<T> = {
   };
 };
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const url = `${BASE_URL}${path}`;
+type FetchOptions = RequestInit & {
+  params?: Record<string, string | number | boolean | undefined>;
+};
+
+/**
+ * Core API request handler (the "interceptor")
+ * Abstracts base URL, versioning, headers, and error handling.
+ */
+async function request<T>(path: string, options: FetchOptions = {}): Promise<T> {
+  const { params, ...init } = options;
   
+  // 1. Abstract Base URL & Versioning
+  let url = path.startsWith('http') ? path : `${BASE_URL}${path}`;
+
+  // 2. Abstract Query Parameters
+  if (params) {
+    const searchParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined) searchParams.append(key, String(value));
+    });
+    const queryString = searchParams.toString();
+    if (queryString) {
+      url += (url.includes('?') ? '&' : '?') + queryString;
+    }
+  }
+
+  // 3. Abstract Headers & Credentials
   const response = await fetch(url, {
     ...init,
     headers: {
       'Content-Type': 'application/json',
-      ...init?.headers,
+      'Accept': 'application/json',
+      ...init.headers,
     },
-    credentials: init?.credentials || 'include',
+    credentials: init.credentials || 'include',
   });
 
+  // 4. Abstract Error Handling
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: 'An unknown error occurred' }));
     throw new Error(error.message || `API error ${response.status}`);
   }
 
+  if (response.status === 204) return {} as T;
   return response.json();
 }
 
+/**
+ * API Client Methods
+ */
+const client = {
+  get: <T>(path: string, options?: FetchOptions) => request<T>(path, { ...options, method: 'GET' }),
+  post: <T>(path: string, body?: unknown, options?: FetchOptions) => 
+    request<T>(path, { ...options, method: 'POST', body: JSON.stringify(body) }),
+  patch: <T>(path: string, body?: unknown, options?: FetchOptions) => 
+    request<T>(path, { ...options, method: 'PATCH', body: JSON.stringify(body) }),
+  put: <T>(path: string, body?: unknown, options?: FetchOptions) => 
+    request<T>(path, { ...options, method: 'PUT', body: JSON.stringify(body) }),
+  delete: <T>(path: string, options?: FetchOptions) => request<T>(path, { ...options, method: 'DELETE' }),
+};
+
 export const api = {
+  // Expose the raw client for custom calls
+  client,
+
   products: {
-    list: (query?: Record<string, string | number | boolean | undefined>) => {
-      const params = new URLSearchParams(query as Record<string, string>);
-      return request<PaginatedResponse<Product>>(`/products?${params.toString()}`);
-    },
-    adminList: (query?: Record<string, string | number | boolean | undefined>) => {
-      const params = new URLSearchParams(query as Record<string, string>);
-      return request<PaginatedResponse<Product>>(`/admin/products?${params.toString()}`);
-    },
-    create: (data: CreateProductDto) => request<Product>('/products', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
-    update: (id: string, data: Partial<CreateProductDto>) => request<Product>(`/products/${id}`, {
-      method: 'PATCH',
-      body: JSON.stringify(data),
-    }),
-    delete: (id: string) => request<void>(`/products/${id}`, { method: 'DELETE' }),
+    list: (query?: Record<string, string | number | boolean | undefined>) => 
+      client.get<PaginatedResponse<Product>>('/products', { params: query }),
+    adminList: (query?: Record<string, string | number | boolean | undefined>) => 
+      client.get<PaginatedResponse<Product>>('/admin/products', { params: query }),
+    create: (data: CreateProductDto) => client.post<Product>('/products', data),
+    update: (id: string, data: Partial<CreateProductDto>) => client.patch<Product>(`/products/${id}`, data),
+    delete: (id: string) => client.delete<void>(`/products/${id}`),
   },
   categories: {
-    list: () => request<Category[]>('/categories'),
-    create: (data: CreateCategoryDto) => request<Category>('/categories', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
-    update: (id: string, data: Partial<CreateCategoryDto>) => request<Category>(`/categories/${id}`, {
-      method: 'PATCH',
-      body: JSON.stringify(data),
-    }),
-    delete: (id: string) => request<void>(`/categories/${id}`, { method: 'DELETE' }),
+    list: () => client.get<Category[]>('/categories'),
+    create: (data: CreateCategoryDto) => client.post<Category>('/categories', data),
+    update: (id: string, data: Partial<CreateCategoryDto>) => client.patch<Category>(`/categories/${id}`, data),
+    delete: (id: string) => client.delete<void>(`/categories/${id}`),
   },
   orders: {
-    list: (query?: Record<string, string | number | boolean | undefined>) => {
-      const params = new URLSearchParams(query as Record<string, string>);
-      return request<PaginatedResponse<Order>>(`/orders/admin?${params.toString()}`);
-    },
-    stats: () => request<{ totalOrders: number; totalRevenue: number; pendingOrders: number }>('/orders/admin/stats'),
-    byId: (id: string) => request<Order>(`/orders/admin/${id}`),
-    updateStatus: (id: string, data: UpdateOrderStatusDto) => request<Order>(`/orders/admin/${id}/status`, {
-      method: 'PATCH',
-      body: JSON.stringify(data),
-    }),
+    list: (query?: Record<string, string | number | boolean | undefined>) => 
+      client.get<PaginatedResponse<Order>>('/orders/admin', { params: query }),
+    stats: () => client.get<{ totalOrders: number; totalRevenue: number; pendingOrders: number }>('/orders/admin/stats'),
+    byId: (id: string) => client.get<Order>(`/orders/admin/${id}`),
+    updateStatus: (id: string, data: UpdateOrderStatusDto) => 
+      client.patch<Order>(`/orders/admin/${id}/status`, data),
   },
   auth: {
-    login: (data: LoginDto) => request<{ user: User; access_token: string }>('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
-    logout: () => request<{ message: string }>('/auth/logout', { method: 'POST' }),
-    me: (init?: RequestInit) => request<User>('/auth/me', init),
+    login: (data: LoginDto) => client.post<{ user: User; access_token: string }>('/auth/login', data),
+    logout: () => client.post<{ message: string }>('/auth/logout'),
+    me: (init?: RequestInit) => client.get<User>('/auth/me', init),
   },
   upload: {
     image: (file: File) => {
       const formData = new FormData();
       formData.append('file', file);
+      // Special case: we don't want to set Content-Type header manually for FormData
       return fetch(`${BASE_URL}/admin/upload/image`, {
         method: 'POST',
         body: formData,
         credentials: 'include',
-      }).then(res => res.json());
+      }).then(res => {
+        if (!res.ok) throw new Error('Upload failed');
+        return res.json();
+      });
     }
   }
 };

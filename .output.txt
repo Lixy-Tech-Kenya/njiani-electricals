@@ -24,51 +24,51 @@ apps/admin build: [2K
 apps/web build: vite v8.0.7 building client environment for production...
 apps/web build: [2K
 apps/admin build: transforming...✓ 3787 modules transformed.
+apps/web build: transforming...✓ 3866 modules transformed.
 apps/admin build: rendering chunks...
+apps/web build: rendering chunks...
 apps/admin build: computing gzip size...
 apps/admin build: .svelte-kit/output/client/_app/version.json                        0.02 kB │ gzip:  0.04 kB
 apps/admin build: .svelte-kit/output/client/.vite/manifest.json                      3.19 kB │ gzip:  0.62 kB
 apps/admin build: .svelte-kit/output/client/_app/immutable/assets/0.DY8pgDxS.css    10.42 kB │ gzip:  2.91 kB
 apps/admin build: .svelte-kit/output/client/_app/immutable/chunks/D1hYfEew.js        0.06 kB │ gzip:  0.08 kB
-apps/admin build: .svelte-kit/output/client/_app/immutable/entry/start.CB7snaSd.js   0.08 kB │ gzip:  0.09 kB
+apps/admin build: .svelte-kit/output/client/_app/immutable/entry/start.BPFXL9FJ.js   0.08 kB │ gzip:  0.09 kB
 apps/admin build: .svelte-kit/output/client/_app/immutable/nodes/2.BCx0-BXI.js       0.17 kB │ gzip:  0.15 kB
 apps/admin build: .svelte-kit/output/client/_app/immutable/nodes/3.lB_LvWIT.js       0.28 kB │ gzip:  0.23 kB
-apps/admin build: .svelte-kit/output/client/_app/immutable/nodes/1.D7B6Zs2i.js       1.06 kB │ gzip:  0.50 kB
+apps/admin build: .svelte-kit/output/client/_app/immutable/nodes/1.CpJ4DbWa.js       1.06 kB │ gzip:  0.50 kB
 apps/admin build: .svelte-kit/output/client/_app/immutable/chunks/CHncfsjL.js        1.20 kB │ gzip:  0.68 kB
 apps/admin build: .svelte-kit/output/client/_app/immutable/nodes/0.4U1gexIU.js       2.40 kB │ gzip:  0.99 kB
-apps/admin build: .svelte-kit/output/client/_app/immutable/entry/app.oI2ig-rs.js     2.93 kB │ gzip:  1.29 kB
-apps/admin build: .svelte-kit/output/client/_app/immutable/nodes/4.CCPwuLI0.js       6.33 kB │ gzip:  2.73 kB
-apps/admin build: .svelte-kit/output/client/_app/immutable/chunks/CZ6M_2Xx.js       25.84 kB │ gzip: 10.07 kB
+apps/admin build: .svelte-kit/output/client/_app/immutable/entry/app.C0uXEelf.js     2.93 kB │ gzip:  1.30 kB
+apps/admin build: .svelte-kit/output/client/_app/immutable/nodes/4.Dzo1IxPb.js       6.63 kB │ gzip:  2.92 kB
+apps/admin build: .svelte-kit/output/client/_app/immutable/chunks/jNXPUT3G.js       25.84 kB │ gzip: 10.07 kB
 apps/admin build: .svelte-kit/output/client/_app/immutable/chunks/BnsDlOqK.js       53.56 kB │ gzip: 20.41 kB
-apps/admin build: ✓ built in 2.46s
-apps/web build: transforming...✓ 3866 modules transformed.
-apps/web build: rendering chunks...
+apps/admin build: ✓ built in 2.76s
 apps/web build: computing gzip size...
 apps/web build: .svelte-kit/output/client/_app/version.json                        0.02 kB │ gzip:  0.04 kB
 apps/web build: .svelte-kit/output/client/.vite/manifest.json                      5.78 kB │ gzip:  0.92 kB
 apps/web build: .svelte-kit/output/client/_app/immutable/assets/0.E7UVOYVC.css    27.40 kB │ gzip:  5.62 kB
 apps/web build: .svelte-kit/output/client/_app/immutable/chunks/Cfug8aQt.js        0.06 kB │ gzip:  0.08 kB
-apps/web build: .svelte-kit/output/client/_app/immutable/entry/start.C0_CUeE3.js   0.08 kB │ gzip:  0.09 kB
-apps/web build: .svelte-kit/output/client/_app/immutable/nodes/1.DgxKiBXj.js       0.37 kB │ gzip:  0.26 kB
+apps/web build: .svelte-kit/output/client/_app/immutable/entry/start.BiW6V2EC.js   0.08 kB │ gzip:  0.09 kB
+apps/web build: .svelte-kit/output/client/_app/immutable/nodes/1.Bi4YiIif.js       0.37 kB │ gzip:  0.26 kB
 apps/web build: .svelte-kit/output/client/_app/immutable/chunks/YswiPlSF.js        0.42 kB │ gzip:  0.31 kB
 apps/web build: .svelte-kit/output/client/_app/immutable/chunks/sTgIXsl9.js        0.50 kB │ gzip:  0.37 kB
 apps/web build: .svelte-kit/output/client/_app/immutable/chunks/pm-KjuhG.js        0.52 kB │ gzip:  0.37 kB
-apps/web build: .svelte-kit/output/client/_app/immutable/chunks/DGyA2j6T.js        0.76 kB │ gzip:  0.33 kB
+apps/web build: .svelte-kit/output/client/_app/immutable/chunks/CywBz10e.js        0.76 kB │ gzip:  0.33 kB
 apps/web build: .svelte-kit/output/client/_app/immutable/chunks/B0BvW1x3.js        1.20 kB │ gzip:  0.68 kB
 apps/web build: .svelte-kit/output/client/_app/immutable/chunks/Dc8HF1oc.js        1.43 kB │ gzip:  0.84 kB
-apps/web build: .svelte-kit/output/client/_app/immutable/chunks/ByyMttlL.js        1.86 kB │ gzip:  0.87 kB
-apps/web build: .svelte-kit/output/client/_app/immutable/nodes/4.B_bo1vT1.js       2.78 kB │ gzip:  1.35 kB
-apps/web build: .svelte-kit/output/client/_app/immutable/entry/app.DG2h_Wwi.js     3.48 kB │ gzip:  1.47 kB
-apps/web build: .svelte-kit/output/client/_app/immutable/nodes/6.bP5Hi8xZ.js       6.06 kB │ gzip:  2.62 kB
-apps/web build: .svelte-kit/output/client/_app/immutable/nodes/5.-R9WD_3Y.js       6.10 kB │ gzip:  2.59 kB
-apps/web build: .svelte-kit/output/client/_app/immutable/nodes/2.DfB7qgxR.js       7.82 kB │ gzip:  2.97 kB
+apps/web build: .svelte-kit/output/client/_app/immutable/chunks/Cjpo2Zar.js        2.14 kB │ gzip:  1.01 kB
+apps/web build: .svelte-kit/output/client/_app/immutable/nodes/4.Bx6kPLPp.js       2.78 kB │ gzip:  1.35 kB
+apps/web build: .svelte-kit/output/client/_app/immutable/entry/app.Cp69zkuY.js     3.48 kB │ gzip:  1.47 kB
+apps/web build: .svelte-kit/output/client/_app/immutable/nodes/6.DbAcVm-f.js       6.06 kB │ gzip:  2.62 kB
+apps/web build: .svelte-kit/output/client/_app/immutable/nodes/5.DYnvUQk0.js       6.10 kB │ gzip:  2.59 kB
+apps/web build: .svelte-kit/output/client/_app/immutable/nodes/2.C3bgBomn.js       7.82 kB │ gzip:  2.98 kB
 apps/web build: .svelte-kit/output/client/_app/immutable/chunks/yCkX14dr.js        9.65 kB │ gzip:  3.59 kB
-apps/web build: .svelte-kit/output/client/_app/immutable/nodes/3.BYytUExT.js      10.32 kB │ gzip:  3.85 kB
-apps/web build: .svelte-kit/output/client/_app/immutable/nodes/0.CC9evhMJ.js      13.50 kB │ gzip:  4.52 kB
+apps/web build: .svelte-kit/output/client/_app/immutable/nodes/3.C4wVVdYI.js      10.32 kB │ gzip:  3.85 kB
+apps/web build: .svelte-kit/output/client/_app/immutable/nodes/0.DFOV3JyT.js      13.50 kB │ gzip:  4.52 kB
 apps/web build: .svelte-kit/output/client/_app/immutable/chunks/DgKIq-uC.js       13.71 kB │ gzip:  4.73 kB
-apps/web build: .svelte-kit/output/client/_app/immutable/chunks/716SZYqh.js       25.85 kB │ gzip: 10.08 kB
+apps/web build: .svelte-kit/output/client/_app/immutable/chunks/luT-RhvD.js       25.85 kB │ gzip: 10.08 kB
 apps/web build: .svelte-kit/output/client/_app/immutable/chunks/BxcTLeXt.js       55.01 kB │ gzip: 20.95 kB
-apps/web build: ✓ built in 2.52s
+apps/web build: ✓ built in 2.76s
 apps/admin build: computing gzip size...
 apps/admin build: .svelte-kit/output/server/.vite/manifest.json                           5.10 kB │ gzip:  0.73 kB
 apps/admin build: .svelte-kit/output/server/_app/immutable/assets/_layout.MWzRqKKU.css   10.35 kB │ gzip:  2.91 kB
@@ -77,25 +77,25 @@ apps/admin build: .svelte-kit/output/server/entries/pages/_page.svelte.js       
 apps/admin build: .svelte-kit/output/server/internal.js                                   0.40 kB │ gzip:  0.19 kB
 apps/admin build: .svelte-kit/output/server/entries/fallbacks/layout.svelte.js            0.42 kB │ gzip:  0.30 kB
 apps/admin build: .svelte-kit/output/server/entries/hooks.server.js                       0.49 kB │ gzip:  0.30 kB
-apps/admin build: .svelte-kit/output/server/chunks/client2.js                             2.23 kB │ gzip:  0.79 kB
 apps/admin build: .svelte-kit/output/server/entries/pages/_layout.svelte.js               2.58 kB │ gzip:  1.05 kB
 apps/admin build: .svelte-kit/output/server/chunks/client.js                              2.80 kB │ gzip:  1.12 kB
+apps/admin build: .svelte-kit/output/server/chunks/client2.js                             3.00 kB │ gzip:  1.14 kB
 apps/admin build: .svelte-kit/output/server/entries/fallbacks/error.svelte.js             3.92 kB │ gzip:  1.43 kB
 apps/admin build: .svelte-kit/output/server/chunks/environment.js                         6.22 kB │ gzip:  2.27 kB
 apps/admin build: .svelte-kit/output/server/chunks/exports.js                            12.24 kB │ gzip:  3.61 kB
 apps/admin build: .svelte-kit/output/server/entries/pages/login/_page.svelte.js          16.71 kB │ gzip:  3.90 kB
-apps/admin build: .svelte-kit/output/server/chunks/internal.js                           20.46 kB │ gzip:  6.31 kB
+apps/admin build: .svelte-kit/output/server/chunks/internal.js                           20.46 kB │ gzip:  6.30 kB
 apps/admin build: .svelte-kit/output/server/chunks/shared.js                             24.24 kB │ gzip:  6.51 kB
 apps/admin build: .svelte-kit/output/server/chunks/utils.js                              29.65 kB │ gzip:  8.46 kB
 apps/admin build: .svelte-kit/output/server/remote-entry.js                              36.11 kB │ gzip:  8.08 kB
 apps/admin build: .svelte-kit/output/server/index.js                                    132.47 kB │ gzip: 33.60 kB
 apps/admin build: .svelte-kit/output/server/chunks/dev.js                               142.39 kB │ gzip: 36.72 kB
 apps/admin build: [33m[PLUGIN_TIMINGS] Warning:[0m Your build spent significant time in plugins. Here is a breakdown:
-apps/admin build:   - vite-plugin-sveltekit-guard (78%)
-apps/admin build:   - vite-plugin-sveltekit-virtual-modules (10%)
+apps/admin build:   - vite-plugin-sveltekit-guard (81%)
 apps/admin build:   - vite-plugin-svelte:compile (8%)
+apps/admin build:   - vite-plugin-sveltekit-virtual-modules (7%)
 apps/admin build: See https://rolldown.rs/options/checks#plugintimings for more details.
-apps/admin build: ✓ built in 5.94s
+apps/admin build: ✓ built in 6.64s
 apps/admin build: Run npm run preview to preview your production build locally.
 apps/admin build: > Using @sveltejs/adapter-auto
 apps/admin build:   Could not detect a supported production environment. See https://svelte.dev/docs/kit/adapters to learn how to configure your app to run on the platform of your choosing
@@ -110,9 +110,9 @@ apps/web build: .svelte-kit/output/server/chunks/message-circle.js              
 apps/web build: .svelte-kit/output/server/chunks/shopping-cart.js                          0.90 kB │ gzip:  0.48 kB
 apps/web build: .svelte-kit/output/server/chunks/environment.js                            1.46 kB │ gzip:  0.65 kB
 apps/web build: .svelte-kit/output/server/chunks/client.js                                 2.80 kB │ gzip:  1.12 kB
-apps/web build: .svelte-kit/output/server/chunks/cart.svelte.js                            2.93 kB │ gzip:  1.13 kB
 apps/web build: .svelte-kit/output/server/chunks/state.js                                  3.41 kB │ gzip:  1.30 kB
 apps/web build: .svelte-kit/output/server/entries/pages/order/success/_page.svelte.js      3.51 kB │ gzip:  1.38 kB
+apps/web build: .svelte-kit/output/server/chunks/cart.svelte.js                            3.65 kB │ gzip:  1.39 kB
 apps/web build: .svelte-kit/output/server/entries/pages/products/_slug_/_page.svelte.js    7.68 kB │ gzip:  2.40 kB
 apps/web build: .svelte-kit/output/server/entries/pages/products/_page.svelte.js           8.50 kB │ gzip:  2.49 kB
 apps/web build: .svelte-kit/output/server/entries/pages/cart/_page.svelte.js               8.69 kB │ gzip:  2.41 kB
@@ -128,15 +128,15 @@ apps/web build: .svelte-kit/output/server/chunks/utils.js                       
 apps/web build: .svelte-kit/output/server/remote-entry.js                                 36.11 kB │ gzip:  8.08 kB
 apps/web build: .svelte-kit/output/server/index.js                                       132.48 kB │ gzip: 33.60 kB
 apps/web build: .svelte-kit/output/server/chunks/index-server.js                         147.00 kB │ gzip: 37.94 kB
-apps/web build: ✓ built in 6.06s
-apps/web build: Run npm run preview to preview your production build locally.
 apps/web build: [33m[PLUGIN_TIMINGS] Warning:[0m Your build spent significant time in plugins. Here is a breakdown:
-apps/web build:   - vite-plugin-sveltekit-guard (79%)
-apps/web build:   - vite-plugin-svelte:compile (9%)
-apps/web build:   - vite-plugin-sveltekit-virtual-modules (8%)
+apps/web build:   - vite-plugin-sveltekit-guard (80%)
+apps/web build:   - vite-plugin-sveltekit-virtual-modules (9%)
+apps/web build:   - vite-plugin-svelte:compile (7%)
 apps/web build: See https://rolldown.rs/options/checks#plugintimings for more details.
+apps/web build: ✓ built in 6.67s
+apps/web build: Run npm run preview to preview your production build locally.
 apps/web build: > Using @sveltejs/adapter-auto
 apps/web build:   Could not detect a supported production environment. See https://svelte.dev/docs/kit/adapters to learn how to configure your app to run on the platform of your choosing
 apps/web build:   ✔ done
-apps/admin build: Done
 apps/web build: Done
+apps/admin build: Done

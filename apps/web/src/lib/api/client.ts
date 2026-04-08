@@ -19,72 +19,93 @@ export type PaginatedResponse<T> = {
   };
 };
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const url = `${BASE_URL}${path}`;
+type FetchOptions = RequestInit & {
+  params?: Record<string, string | number | boolean | undefined>;
+};
+
+/**
+ * Core API request handler (the "interceptor")
+ * Abstracts base URL, versioning, headers, and error handling.
+ */
+async function request<T>(path: string, options: FetchOptions = {}): Promise<T> {
+  const { params, ...init } = options;
   
-  // For client-side requests, credentials: 'include' is important for cookies
+  // 1. Abstract Base URL & Versioning
+  let url = path.startsWith('http') ? path : `${BASE_URL}${path}`;
+
+  // 2. Abstract Query Parameters
+  if (params) {
+    const searchParams = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined) searchParams.append(key, String(value));
+    });
+    const queryString = searchParams.toString();
+    if (queryString) {
+      url += (url.includes('?') ? '&' : '?') + queryString;
+    }
+  }
+
+  // 3. Abstract Headers & Credentials
   const response = await fetch(url, {
     ...init,
     headers: {
       'Content-Type': 'application/json',
-      ...init?.headers,
+      'Accept': 'application/json',
+      ...init.headers,
     },
-    credentials: init?.credentials || 'include',
+    credentials: init.credentials || 'include',
   });
 
+  // 4. Abstract Error Handling
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: 'An unknown error occurred' }));
     throw new Error(error.message || `API error ${response.status}`);
   }
 
+  if (response.status === 204) return {} as T;
   return response.json();
 }
 
+/**
+ * API Client Methods
+ */
+const client = {
+  get: <T>(path: string, options?: FetchOptions) => request<T>(path, { ...options, method: 'GET' }),
+  post: <T>(path: string, body?: unknown, options?: FetchOptions) => 
+    request<T>(path, { ...options, method: 'POST', body: JSON.stringify(body) }),
+  patch: <T>(path: string, body?: unknown, options?: FetchOptions) => 
+    request<T>(path, { ...options, method: 'PATCH', body: JSON.stringify(body) }),
+  put: <T>(path: string, body?: unknown, options?: FetchOptions) => 
+    request<T>(path, { ...options, method: 'PUT', body: JSON.stringify(body) }),
+  delete: <T>(path: string, options?: FetchOptions) => request<T>(path, { ...options, method: 'DELETE' }),
+};
+
 export const api = {
+  // Expose the raw client for custom calls
+  client,
+
   products: {
-    list: (query?: ProductQueryDto) => {
-      const params = new URLSearchParams();
-      if (query) {
-        Object.entries(query).forEach(([key, value]) => {
-          if (value !== undefined) params.append(key, String(value));
-        });
-      }
-      return request<PaginatedResponse<Product>>(`/products?${params.toString()}`);
-    },
-    featured: () => request<Product[]>('/products/featured'),
-    bySlug: (slug: string) => request<Product>(`/products/${slug}`),
+    list: (query?: ProductQueryDto) => client.get<PaginatedResponse<Product>>('/products', { params: query }),
+    featured: () => client.get<Product[]>('/products/featured'),
+    bySlug: (slug: string) => client.get<Product>(`/products/${slug}`),
   },
   categories: {
-    list: () => request<Category[]>('/categories'),
-    bySlug: (slug: string) => request<Category>(`/categories/${slug}`),
+    list: () => client.get<Category[]>('/categories'),
+    bySlug: (slug: string) => client.get<Category>(`/categories/${slug}`),
   },
   orders: {
-    create: (data: CreateOrderDto) => request<Order>('/orders', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
+    create: (data: CreateOrderDto) => client.post<Order>('/orders', data),
   },
   cart: {
-    get: () => request<{ cartId: string; items: Array<{ productId: string; quantity: number; product: Product | null }> }>('/cart'),
-    addItem: (productId: string, quantity: number) => request<{ cartId: string; items: Array<{ productId: string; quantity: number }> }>('/cart/items', {
-      method: 'POST',
-      body: JSON.stringify({ productId, quantity }),
-    }),
-    updateQuantity: (productId: string, quantity: number) => request<{ cartId: string; items: Array<{ productId: string; quantity: number }> }>(`/cart/items/${productId}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ quantity }),
-    }),
-    removeItem: (productId: string) => request<{ cartId: string; items: Array<{ productId: string; quantity: number }> }>(`/cart/items/${productId}`, {
-      method: 'DELETE',
-    }),
-    clear: () => request<{ cartId: string; items: [] }>('/cart', { method: 'DELETE' }),
+    get: () => client.get<{ cartId: string; items: Array<{ productId: string; quantity: number; product: Product | null }> }>('/cart'),
+    addItem: (productId: string, quantity: number) => client.post<{ cartId: string; items: Array<{ productId: string; quantity: number }> }>('/cart/items', { productId, quantity }),
+    updateQuantity: (productId: string, quantity: number) => client.patch<{ cartId: string; items: Array<{ productId: string; quantity: number }> }>(`/cart/items/${productId}`, { quantity }),
+    removeItem: (productId: string) => client.delete<{ cartId: string; items: Array<{ productId: string; quantity: number }> }>(`/cart/items/${productId}`),
+    clear: () => client.delete<{ cartId: string; items: [] }>('/cart'),
   },
   auth: {
-    login: (data: LoginDto) => request<{ user: { id: string; email: string; name: string; role: string }; access_token: string }>('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
-    logout: () => request<{ message: string }>('/auth/logout', { method: 'POST' }),
-    me: () => request<{ id: string; email: string; name: string; role: string }>('/auth/me'),
+    login: (data: LoginDto) => client.post<{ user: { id: string; email: string; name: string; role: string }; access_token: string }>('/auth/login', data),
+    logout: () => client.post<{ message: string }>('/auth/logout'),
+    me: () => client.get<{ id: string; email: string; name: string; role: string }>('/auth/me'),
   }
 };
