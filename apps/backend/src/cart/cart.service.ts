@@ -3,6 +3,11 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { v4 as uuidv4 } from 'uuid';
 
+interface CartItemData {
+  productId: string;
+  quantity: number;
+}
+
 @Injectable()
 export class CartService {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
@@ -15,7 +20,7 @@ export class CartService {
     if (!cartId) {
       cartId = uuidv4();
     }
-    const items: any[] = (await this.cacheManager.get(this.getCartKey(cartId))) || [];
+    const items: CartItemData[] = (await this.cacheManager.get(this.getCartKey(cartId))) || [];
     
     // Enrich with product details
     const enrichedItems = await Promise.all(
@@ -35,9 +40,9 @@ export class CartService {
     };
   }
 
-  async addItem(cartId: string, item: { productId: string; quantity: number }) {
+  async addItem(cartId: string, item: CartItemData) {
     const key = this.getCartKey(cartId);
-    let items: any[] = (await this.cacheManager.get(key)) || [];
+    let items: CartItemData[] = (await this.cacheManager.get(key)) || [];
     
     const existingItem = items.find((i) => i.productId === item.productId);
     if (existingItem) {
@@ -52,7 +57,7 @@ export class CartService {
 
   async updateQuantity(cartId: string, productId: string, quantity: number) {
     const key = this.getCartKey(cartId);
-    let items: any[] = (await this.cacheManager.get(key)) || [];
+    let items: CartItemData[] = (await this.cacheManager.get(key)) || [];
     
     const item = items.find((i) => i.productId === productId);
     if (item) {
@@ -68,7 +73,7 @@ export class CartService {
 
   async removeItem(cartId: string, productId: string) {
     const key = this.getCartKey(cartId);
-    let items: any[] = (await this.cacheManager.get(key)) || [];
+    let items: CartItemData[] = (await this.cacheManager.get(key)) || [];
     
     items = items.filter((i) => i.productId !== productId);
 

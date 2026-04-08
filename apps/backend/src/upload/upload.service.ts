@@ -20,7 +20,7 @@ export class UploadService {
     }
   }
 
-  async uploadImage(file: any): Promise<string> {
+  async uploadImage(file: Express.Multer.File): Promise<string> {
     if (!file.mimetype.startsWith('image/')) {
       throw new BadRequestException('Only image files are allowed');
     }

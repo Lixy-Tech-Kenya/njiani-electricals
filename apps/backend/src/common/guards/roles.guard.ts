@@ -1,6 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Role } from '@njiani/shared';
+import { UserEntity } from '../entities';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -14,7 +15,8 @@ export class RolesGuard implements CanActivate {
     if (!requiredRoles) {
       return true;
     }
-    const { user } = context.switchToHttp().getRequest();
-    return requiredRoles.some((role) => user.role === role);
+    const request = context.switchToHttp().getRequest<{ user: UserEntity }>();
+    const user = request.user;
+    return user && requiredRoles.some((role) => user.role === role);
   }
 }

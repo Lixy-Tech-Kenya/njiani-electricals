@@ -6,6 +6,12 @@ import { Request } from 'express';
 import { PrismaService } from '../../prisma/prisma.service';
 import { UserEntity } from '../../common/entities';
 
+interface JwtPayload {
+  sub: string;
+  email: string;
+  role: string;
+}
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
@@ -24,7 +30,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: any): Promise<UserEntity> {
+  async validate(payload: JwtPayload): Promise<UserEntity> {
     const user = await this.prisma.user.findUnique({
       where: { id: payload.sub },
     });
@@ -33,6 +39,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
 
-    return new UserEntity(user as any);
+    const { passwordHash, ...safeUser } = user;
+    return new UserEntity(safeUser);
   }
 }

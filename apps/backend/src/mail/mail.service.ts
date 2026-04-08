@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
+import { OrderEntity } from '../common/entities';
 
 @Injectable()
 export class MailService {
@@ -9,7 +10,7 @@ export class MailService {
     private configService: ConfigService,
   ) {}
 
-  async sendOrderAlerts(order: any) {
+  async sendOrderAlerts(order: OrderEntity) {
     const businessEmail = this.configService.get('BUSINESS_EMAIL');
 
     // 1. Send confirmation to customer (if email exists)

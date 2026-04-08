@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateOrderDto, UpdateOrderStatusDto } from '@njiani/shared';
+import { CreateOrderDto, UpdateOrderStatusDto, OrderStatus } from '@njiani/shared';
 import { OrderEntity } from '../common/entities';
 import { MailService } from '../mail/mail.service';
 import { Prisma } from '@prisma/client';
@@ -13,6 +13,17 @@ export class OrdersService {
   ) {}
 
   async create(createOrderDto: CreateOrderDto): Promise<OrderEntity> {
+    // 0. Check idempotency
+    if (createOrderDto.idempotencyKey) {
+      const existing = await this.prisma.order.findUnique({
+        where: { idempotencyKey: createOrderDto.idempotencyKey },
+        include: { items: true },
+      });
+      if (existing) {
+        return new OrderEntity(existing);
+      }
+    }
+
     // 1. Fetch products and validate status
     const productIds = createOrderDto.items.map(item => item.productId);
     const products = await this.prisma.product.findMany({
@@ -56,37 +67,62 @@ export class OrdersService {
     const referenceNumber = `NJE-${dateStr}-${(count + 1).toString().padStart(4, '0')}`;
 
     // 4. Persist in transaction
-    const order = await this.prisma.order.create({
-      data: {
-        referenceNumber,
-        customerName: createOrderDto.customerName,
-        customerPhone: createOrderDto.customerPhone,
-        customerEmail: createOrderDto.customerEmail,
-        customerLocation: createOrderDto.customerLocation,
-        notes: createOrderDto.notes,
-        channel: createOrderDto.channel,
-        totalAmount,
-        status: 'PENDING',
-        items: {
-          create: orderItemsData,
+    const order = await this.prisma.$transaction(async (tx) => {
+      // Re-validate stock within transaction
+      for (const item of createOrderDto.items) {
+        const product = await tx.product.findUnique({
+          where: { id: item.productId },
+          select: { stockQuantity: true, name: true }
+        });
+
+        if (!product || product.stockQuantity < item.quantity) {
+          throw new BadRequestException(`Insufficient stock for product: ${product?.name || item.productId}`);
+        }
+
+        // Decrement stock
+        await tx.product.update({
+          where: { id: item.productId },
+          data: {
+            stockQuantity: { decrement: item.quantity },
+            status: product.stockQuantity - item.quantity === 0 ? 'OUT_OF_STOCK' : 'ACTIVE'
+          }
+        });
+      }
+
+      return tx.order.create({
+        data: {
+          referenceNumber,
+          idempotencyKey: createOrderDto.idempotencyKey,
+          customerName: createOrderDto.customerName,
+          customerPhone: createOrderDto.customerPhone,
+          customerEmail: createOrderDto.customerEmail,
+          customerLocation: createOrderDto.customerLocation,
+          notes: createOrderDto.notes,
+          channel: createOrderDto.channel,
+          totalAmount,
+          status: 'PENDING',
+          items: {
+            create: orderItemsData,
+          },
         },
-      },
-      include: {
-        items: true,
-      },
+        include: {
+          items: true,
+        },
+      });
     });
 
     // 5. Fire emails non-blocking
-    this.mailService.sendOrderAlerts(order).catch(err => {
+    const orderEntity = new OrderEntity(order);
+    this.mailService.sendOrderAlerts(orderEntity).catch(err => {
       console.error('Failed to send order emails:', err);
     });
 
-    return new OrderEntity(order);
+    return orderEntity;
   }
 
   async findAll(page = 1, limit = 20, status?: string) {
     const skip = (page - 1) * limit;
-    const where: Prisma.OrderWhereInput = status ? { status: status as any } : {};
+    const where: Prisma.OrderWhereInput = status ? { status: status as OrderStatus } : {};
 
     const [data, total] = await Promise.all([
       this.prisma.order.findMany({

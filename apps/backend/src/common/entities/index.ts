@@ -91,6 +91,7 @@ export class OrderEntity {
   @Expose() channel!: OrderChannel;
   @Expose() status!: OrderStatus;
   @Expose() totalAmount!: number;
+  @Expose() idempotencyKey?: string | null;
 
   @Expose()
   @Type(() => OrderItemEntity)

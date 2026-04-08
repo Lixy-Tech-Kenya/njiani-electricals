@@ -44,7 +44,7 @@ export class AuthController {
   @Get('me')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get current admin user' })
-  async getMe(@Req() req: any): Promise<UserEntity> {
-    return req.user;
+  async getMe(@Req() req: Request): Promise<UserEntity> {
+    return req.user as UserEntity;
   }
 }

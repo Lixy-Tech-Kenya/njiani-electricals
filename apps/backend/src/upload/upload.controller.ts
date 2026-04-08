@@ -30,7 +30,7 @@ export class UploadController {
       },
     },
   })
-  async uploadFile(@UploadedFile() file: any) {
+  async uploadFile(@UploadedFile() file: Express.Multer.File) {
     const url = await this.uploadService.uploadImage(file);
     return { url };
   }
