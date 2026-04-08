@@ -15,18 +15,21 @@ This plan outlines the complete implementation of **Njiani Electricals Online Ma
 - [x] 3. **Prisma & Database Optimization**:
     - [x] Schema design with appropriate indices for faster querying.
     - [x] **Full-Text Search** support using GIN indices (PostgreSQL).
+    - [ ] **Database Pooling**: Configure Prisma for connection pooling.
     - [ ] Run migrations and set up seeding with dummy data.
 - [x] 4. **NestJS Foundation & Security**:
     - [x] Security headers with `Helmet`.
     - [x] **Rate Limiting** via `@nestjs/throttler` for sensitive endpoints.
     - [x] Global exception filter and response transformation interceptor.
+    - [x] **RBAC Guards**: Implement `JwtAuthGuard` and `RolesGuard` for access control.
     - [x] **Audit Logs**: Trace important admin actions (product changes, order status).
     - [x] **Image Optimization**: Local storage for Phase 1 with resizing/compression (Sharp).
 - [x] 5. **Core API Modules**:
     - [x] **Auth**: JWT-based admin authentication with secure HttpOnly cookie handling.
     - [x] **Categories**: Public read with nested product counts.
     - [x] **Products**: Paginated list with **fuzzy search**, category filters, and featured section.
-    - [x] **Orders**: Secure order creation with server-side price calculation and validation.
+    - [ ] **Orders**: Secure order creation with **transactions**, **idempotency**, server-side price calculation, and validation.
+    - [ ] **Caching**: Implement **Redis** for caching frequent queries (categories, featured products).
     - [x] **Mail Service**: SMTP-based order alerts and confirmations.
     - [x] **Admin Dashboard Stats**: Summary metrics and recent activity feed.
 - [ ] 6. **Testing**: Comprehensive unit and e2e tests for core business logic.

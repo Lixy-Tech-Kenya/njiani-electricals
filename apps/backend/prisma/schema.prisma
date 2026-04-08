@@ -85,6 +85,7 @@ enum ProductStatus {
 model Order {
   id               String      @id @default(uuid())
   referenceNumber  String      @unique
+  idempotencyKey   String?     @unique
   customerName     String
   customerPhone    String
   customerEmail    String?
