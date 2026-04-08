@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-njiani_pass}
       POSTGRES_DB: ${POSTGRES_DB:-njiani_db}
     ports:
-      - '5432:5432'
+      - '5434:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -20,7 +20,7 @@ services:
     image: redis:7-alpine
     container_name: njiani-redis
     ports:
-      - '6379:6379'
+      - '6380:6379'
     volumes:
       - redisdata:/data
     healthcheck:
