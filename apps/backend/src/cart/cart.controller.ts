@@ -6,7 +6,7 @@ import { Public } from '../common/decorators';
 import { v4 as uuidv4 } from 'uuid';
 
 @ApiTags('Cart')
-@Controller('api/cart')
+@Controller('cart')
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 

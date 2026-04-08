@@ -8,7 +8,7 @@ import { Role } from '@njiani/shared';
 import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('Upload')
-@Controller('api/admin/upload')
+@Controller('admin/upload')
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 

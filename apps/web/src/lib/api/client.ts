@@ -7,7 +7,7 @@ import type {
   LoginDto
 } from '@njiani/shared';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3500';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3500/api/v1';
 
 export type PaginatedResponse<T> = {
   data: T[];
@@ -49,42 +49,42 @@ export const api = {
           if (value !== undefined) params.append(key, String(value));
         });
       }
-      return request<PaginatedResponse<Product>>(`/api/products?${params.toString()}`);
+      return request<PaginatedResponse<Product>>(`/products?${params.toString()}`);
     },
-    featured: () => request<Product[]>('/api/products/featured'),
-    bySlug: (slug: string) => request<Product>(`/api/products/${slug}`),
+    featured: () => request<Product[]>('/products/featured'),
+    bySlug: (slug: string) => request<Product>(`/products/${slug}`),
   },
   categories: {
-    list: () => request<Category[]>('/api/categories'),
-    bySlug: (slug: string) => request<Category>(`/api/categories/${slug}`),
+    list: () => request<Category[]>('/categories'),
+    bySlug: (slug: string) => request<Category>(`/categories/${slug}`),
   },
   orders: {
-    create: (data: CreateOrderDto) => request<Order>('/api/orders', {
+    create: (data: CreateOrderDto) => request<Order>('/orders', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
   },
   cart: {
-    get: () => request<any>('/api/cart'),
-    addItem: (productId: string, quantity: number) => request<any>('/api/cart/items', {
+    get: () => request<any>('/cart'),
+    addItem: (productId: string, quantity: number) => request<any>('/cart/items', {
       method: 'POST',
       body: JSON.stringify({ productId, quantity }),
     }),
-    updateQuantity: (productId: string, quantity: number) => request<any>(`/api/cart/items/${productId}`, {
+    updateQuantity: (productId: string, quantity: number) => request<any>(`/cart/items/${productId}`, {
       method: 'PATCH',
       body: JSON.stringify({ quantity }),
     }),
-    removeItem: (productId: string) => request<any>(`/api/cart/items/${productId}`, {
+    removeItem: (productId: string) => request<any>(`/cart/items/${productId}`, {
       method: 'DELETE',
     }),
-    clear: () => request<any>('/api/cart', { method: 'DELETE' }),
+    clear: () => request<any>('/cart', { method: 'DELETE' }),
   },
   auth: {
-    login: (data: LoginDto) => request<any>('/api/auth/login', {
+    login: (data: LoginDto) => request<any>('/auth/login', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
-    logout: () => request<any>('/api/auth/logout', { method: 'POST' }),
-    me: () => request<any>('/api/auth/me'),
+    logout: () => request<any>('/auth/logout', { method: 'POST' }),
+    me: () => request<any>('/auth/me'),
   }
 };

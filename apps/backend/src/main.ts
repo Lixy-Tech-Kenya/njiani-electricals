@@ -1,5 +1,5 @@
 import { NestFactory, Reflector } from '@nestjs/core';
-import { ValidationPipe, ClassSerializerInterceptor, Logger } from '@nestjs/common';
+import { ValidationPipe, ClassSerializerInterceptor, Logger, VersioningType } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
@@ -28,6 +28,15 @@ async function bootstrap() {
   // Cookies
   app.use(cookieParser());
 
+  // Global Prefix
+  app.setGlobalPrefix('api');
+
+  // API Versioning (v1)
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+  });
+
   // Global Validation
   app.useGlobalPipes(
     new ValidationPipe({
@@ -55,8 +64,9 @@ async function bootstrap() {
     SwaggerModule.setup('api/docs', app, document);
   }
 
-  const port = process.env.PORT || 3001;
+  const port = process.env.PORT || 3500;
   await app.listen(port);
   logger.log(`Application is running on: http://localhost:${port}`);
+  logger.log(`Swagger UI is available on: http://localhost:${port}/api/docs`);
 }
 bootstrap();

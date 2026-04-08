@@ -10,7 +10,7 @@ import type {
   User
 } from '@njiani/shared';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3500';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3500/api/v1';
 
 export type PaginatedResponse<T> = {
   data: T[];
@@ -46,59 +46,59 @@ export const api = {
   products: {
     list: (query?: any) => {
       const params = new URLSearchParams(query);
-      return request<PaginatedResponse<Product>>(`/api/products?${params.toString()}`);
+      return request<PaginatedResponse<Product>>(`/products?${params.toString()}`);
     },
     adminList: (query?: any) => {
       const params = new URLSearchParams(query);
-      return request<PaginatedResponse<Product>>(`/api/admin/products?${params.toString()}`);
+      return request<PaginatedResponse<Product>>(`/admin/products?${params.toString()}`);
     },
-    create: (data: CreateProductDto) => request<Product>('/api/products', {
+    create: (data: CreateProductDto) => request<Product>('/products', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
-    update: (id: string, data: Partial<CreateProductDto>) => request<Product>(`/api/products/${id}`, {
+    update: (id: string, data: Partial<CreateProductDto>) => request<Product>(`/products/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     }),
-    delete: (id: string) => request<void>(`/api/products/${id}`, { method: 'DELETE' }),
+    delete: (id: string) => request<void>(`/products/${id}`, { method: 'DELETE' }),
   },
   categories: {
-    list: () => request<Category[]>('/api/categories'),
-    create: (data: CreateCategoryDto) => request<Category>('/api/categories', {
+    list: () => request<Category[]>('/categories'),
+    create: (data: CreateCategoryDto) => request<Category>('/categories', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
-    update: (id: string, data: Partial<CreateCategoryDto>) => request<Category>(`/api/categories/${id}`, {
+    update: (id: string, data: Partial<CreateCategoryDto>) => request<Category>(`/categories/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     }),
-    delete: (id: string) => request<void>(`/api/categories/${id}`, { method: 'DELETE' }),
+    delete: (id: string) => request<void>(`/categories/${id}`, { method: 'DELETE' }),
   },
   orders: {
     list: (query?: any) => {
       const params = new URLSearchParams(query);
-      return request<PaginatedResponse<Order>>(`/api/orders/admin?${params.toString()}`);
+      return request<PaginatedResponse<Order>>(`/orders/admin?${params.toString()}`);
     },
-    stats: () => request<any>('/api/orders/admin/stats'),
-    byId: (id: string) => request<Order>(`/api/orders/admin/${id}`),
-    updateStatus: (id: string, data: UpdateOrderStatusDto) => request<Order>(`/api/orders/admin/${id}/status`, {
+    stats: () => request<any>('/orders/admin/stats'),
+    byId: (id: string) => request<Order>(`/orders/admin/${id}`),
+    updateStatus: (id: string, data: UpdateOrderStatusDto) => request<Order>(`/orders/admin/${id}/status`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     }),
   },
   auth: {
-    login: (data: LoginDto) => request<{ user: User; access_token: string }>('/api/auth/login', {
+    login: (data: LoginDto) => request<{ user: User; access_token: string }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
-    logout: () => request<{ message: string }>('/api/auth/logout', { method: 'POST' }),
-    me: (init?: RequestInit) => request<User>('/api/auth/me', init),
+    logout: () => request<{ message: string }>('/auth/logout', { method: 'POST' }),
+    me: (init?: RequestInit) => request<User>('/auth/me', init),
   },
   upload: {
     image: (file: File) => {
       const formData = new FormData();
       formData.append('file', file);
-      return fetch(`${BASE_URL}/api/admin/upload/image`, {
+      return fetch(`${BASE_URL}/admin/upload/image`, {
         method: 'POST',
         body: formData,
         credentials: 'include',
