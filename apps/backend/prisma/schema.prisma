@@ -1,0 +1,141 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(ADMIN)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  STAFF
+}
+
+model Category {
+  id              String    @id @default(uuid())
+  name            String    @unique
+  slug            String    @unique
+  description     String?
+  imageUrl        String?
+  sortOrder       Int       @default(0)
+  
+  // SEO Metadata
+  metaTitle       String?
+  metaDescription String?
+  keywords        String[]
+  
+  products        Product[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([slug])
+  @@index([sortOrder])
+}
+
+model Product {
+  id                String        @id @default(uuid())
+  name              String
+  sku               String        @unique
+  slug              String        @unique
+  categoryId        String
+  category          Category      @relation(fields: [categoryId], references: [id])
+  price             Int           // KES cents (e.g. 1500 = KES 15.00)
+  description       String        @db.Text
+  imageUrls         String[]
+  status            ProductStatus @default(ACTIVE)
+  isFeatured        Boolean       @default(false)
+  
+  // Inventory
+  stockQuantity     Int           @default(0)
+  lowStockThreshold Int           @default(5)
+  
+  // SEO Metadata
+  metaTitle         String?
+  metaDescription   String?
+  keywords          String[]
+  
+  orderItems        OrderItem[]
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([slug])
+  @@index([categoryId])
+  @@index([status])
+  @@index([isFeatured])
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  OUT_OF_STOCK
+}
+
+model Order {
+  id               String      @id @default(uuid())
+  referenceNumber  String      @unique
+  customerName     String
+  customerPhone    String
+  customerEmail    String?
+  customerLocation String?
+  notes            String?     @db.Text
+  channel          OrderChannel
+  status           OrderStatus @default(PENDING)
+  totalAmount      Int
+  items            OrderItem[]
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@index([referenceNumber])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id          String  @id @default(uuid())
+  orderId     String
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product @relation(fields: [productId], references: [id])
+  productName String
+  sku         String
+  quantity    Int
+  unitPrice   Int
+}
+
+enum OrderChannel {
+  WHATSAPP
+  EMAIL
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  DELIVERED
+  CANCELLED
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String
+  resource  String
+  payload   Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([resource])
+  @@index([createdAt])
+}

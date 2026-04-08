@@ -1,0 +1,25 @@
+export const PRODUCT_CATEGORIES = [
+  'Chandeliers',
+  'Switches',
+  'Outdoor & Garden Electrical Accessories',
+  'Extension Cables',
+  'Electrical Cables',
+  'Wall Brackets',
+  'Solar Floodlights',
+  'Staircase Lights',
+  'LED Floodlights',
+  'Solar Streetlights',
+  'Cat Outs',
+  'String Lights',
+  'Mirror Lights',
+  'Copper Tapes & Lightning Arrestors',
+  'Rechargeable Lamps',
+  'LED Ceiling Lights',
+  'Power Meters',
+  'Sockets (Waterproof & Non-Waterproof)',
+  'Office Lights',
+  'Up & Down Lights',
+  'Other Items',
+] as const;
+
+export type ProductCategoryName = (typeof PRODUCT_CATEGORIES)[number];
