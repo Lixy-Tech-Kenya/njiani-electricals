@@ -3,6 +3,7 @@
 	import { api } from '$lib/api/client';
 	import { ShoppingCart, Trash2, ArrowLeft, MessageCircle, Mail, Loader2 } from 'lucide-svelte';
 	import { goto } from '$app/navigation';
+	import { v4 as uuidv4 } from 'uuid';
 
 	let customerName = $state('');
 	let customerPhone = $state('');
@@ -29,8 +30,9 @@
 				customerLocation: customerLocation || undefined,
 				notes: notes || undefined,
 				channel,
+				idempotencyKey: uuidv4(),
 				items: cart.items.map(i => ({
-					productId: i.product.id,
+					productId: i.product!.id,
 					quantity: i.quantity
 				}))
 			};
@@ -52,8 +54,8 @@
 
 			cart.clear();
 			goto('/order/success?ref=' + order.referenceNumber);
-		} catch (err: any) {
-			error = err.message || 'Failed to place order. Please try again.';
+		} catch (err: unknown) {
+			error = (err as Error).message || 'Failed to place order. Please try again.';
 		} finally {
 			isSubmitting = false;
 		}

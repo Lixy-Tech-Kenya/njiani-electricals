@@ -16,8 +16,8 @@
 		try {
 			await api.auth.login({ email, password });
 			goto('/');
-		} catch (err: any) {
-			error = err.message || 'Login failed. Please check your credentials.';
+		} catch (err: unknown) {
+			error = (err as Error).message || 'Login failed. Please check your credentials.';
 		} finally {
 			isSubmitting = false;
 		}

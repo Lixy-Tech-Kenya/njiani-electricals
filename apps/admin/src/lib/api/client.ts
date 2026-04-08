@@ -6,7 +6,8 @@ import type {
   CreateCategoryDto,
   UpdateOrderStatusDto,
   LoginDto,
-  Role
+  Role,
+  User
 } from '@njiani/shared';
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
@@ -86,12 +87,12 @@ export const api = {
     }),
   },
   auth: {
-    login: (data: LoginDto) => request<any>('/api/auth/login', {
+    login: (data: LoginDto) => request<{ user: User; access_token: string }>('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
-    logout: () => request<any>('/api/auth/logout', { method: 'POST' }),
-    me: () => request<any>('/api/auth/me'),
+    logout: () => request<{ message: string }>('/api/auth/logout', { method: 'POST' }),
+    me: (init?: RequestInit) => request<User>('/api/auth/me', init),
   },
   upload: {
     image: (file: File) => {
