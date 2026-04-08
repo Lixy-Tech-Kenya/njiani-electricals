@@ -44,12 +44,12 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const api = {
   products: {
-    list: (query?: any) => {
-      const params = new URLSearchParams(query);
+    list: (query?: Record<string, string | number | boolean | undefined>) => {
+      const params = new URLSearchParams(query as Record<string, string>);
       return request<PaginatedResponse<Product>>(`/products?${params.toString()}`);
     },
-    adminList: (query?: any) => {
-      const params = new URLSearchParams(query);
+    adminList: (query?: Record<string, string | number | boolean | undefined>) => {
+      const params = new URLSearchParams(query as Record<string, string>);
       return request<PaginatedResponse<Product>>(`/admin/products?${params.toString()}`);
     },
     create: (data: CreateProductDto) => request<Product>('/products', {
@@ -75,11 +75,11 @@ export const api = {
     delete: (id: string) => request<void>(`/categories/${id}`, { method: 'DELETE' }),
   },
   orders: {
-    list: (query?: any) => {
-      const params = new URLSearchParams(query);
+    list: (query?: Record<string, string | number | boolean | undefined>) => {
+      const params = new URLSearchParams(query as Record<string, string>);
       return request<PaginatedResponse<Order>>(`/orders/admin?${params.toString()}`);
     },
-    stats: () => request<any>('/orders/admin/stats'),
+    stats: () => request<{ totalOrders: number; totalRevenue: number; pendingOrders: number }>('/orders/admin/stats'),
     byId: (id: string) => request<Order>(`/orders/admin/${id}`),
     updateStatus: (id: string, data: UpdateOrderStatusDto) => request<Order>(`/orders/admin/${id}/status`, {
       method: 'PATCH',

@@ -65,26 +65,26 @@ export const api = {
     }),
   },
   cart: {
-    get: () => request<any>('/cart'),
-    addItem: (productId: string, quantity: number) => request<any>('/cart/items', {
+    get: () => request<{ cartId: string; items: Array<{ productId: string; quantity: number; product: Product | null }> }>('/cart'),
+    addItem: (productId: string, quantity: number) => request<{ cartId: string; items: Array<{ productId: string; quantity: number }> }>('/cart/items', {
       method: 'POST',
       body: JSON.stringify({ productId, quantity }),
     }),
-    updateQuantity: (productId: string, quantity: number) => request<any>(`/cart/items/${productId}`, {
+    updateQuantity: (productId: string, quantity: number) => request<{ cartId: string; items: Array<{ productId: string; quantity: number }> }>(`/cart/items/${productId}`, {
       method: 'PATCH',
       body: JSON.stringify({ quantity }),
     }),
-    removeItem: (productId: string) => request<any>(`/cart/items/${productId}`, {
+    removeItem: (productId: string) => request<{ cartId: string; items: Array<{ productId: string; quantity: number }> }>(`/cart/items/${productId}`, {
       method: 'DELETE',
     }),
-    clear: () => request<any>('/cart', { method: 'DELETE' }),
+    clear: () => request<{ cartId: string; items: [] }>('/cart', { method: 'DELETE' }),
   },
   auth: {
-    login: (data: LoginDto) => request<any>('/auth/login', {
+    login: (data: LoginDto) => request<{ user: { id: string; email: string; name: string; role: string }; access_token: string }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
-    logout: () => request<any>('/auth/logout', { method: 'POST' }),
-    me: () => request<any>('/auth/me'),
+    logout: () => request<{ message: string }>('/auth/logout', { method: 'POST' }),
+    me: () => request<{ id: string; email: string; name: string; role: string }>('/auth/me'),
   }
 };
