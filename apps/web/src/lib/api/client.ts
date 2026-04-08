@@ -7,7 +7,7 @@ import type {
   LoginDto
 } from '@njiani/shared';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3500';
 
 export type PaginatedResponse<T> = {
   data: T[];

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { CartService } from './cart.service';
+import { CartService, CartItemData } from './cart.service';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { Public } from '../common/decorators';
 import { v4 as uuidv4 } from 'uuid';
@@ -38,7 +38,7 @@ export class CartController {
   async addItem(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
-    @Body() item: { productId: string; quantity: number },
+    @Body() item: CartItemData,
   ) {
     const cartId = this.getCartId(req, res);
     return this.cartService.addItem(cartId, item);

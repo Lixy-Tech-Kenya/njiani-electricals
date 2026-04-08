@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { PrismaService } from '../../prisma/prisma.service';
 import { UserEntity } from '../../common/entities';
+import { Role } from '@njiani/shared';
 
 interface JwtPayload {
   sub: string;
@@ -40,6 +41,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     const { passwordHash, ...safeUser } = user;
-    return new UserEntity(safeUser);
+    return new UserEntity({
+      ...safeUser,
+      role: safeUser.role as unknown as Role,
+    });
   }
 }

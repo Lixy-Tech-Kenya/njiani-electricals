@@ -15,7 +15,7 @@ To recreate this project with the same configuration:
 
 ```sh
 # recreate this project
-pnpm dlx sv@0.15.0 create --template minimal --types ts --add tailwindcss="plugins:none" --no-download-check --install pnpm ../admin
+pnpm dlx sv@0.15.0 create --template minimal --types ts --add tailwindcss="plugins:none" --no-download-check --install pnpm apps/admin
 ```
 
 ## Developing

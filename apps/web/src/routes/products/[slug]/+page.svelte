@@ -26,6 +26,15 @@
 	}
 </script>
 
+<svelte:head>
+	{#if $productQuery.data}
+		<title>{$productQuery.data.metaTitle || $productQuery.data.name} | Njiani Electricals</title>
+		<meta name="description" content={$productQuery.data.metaDescription || $productQuery.data.description.slice(0, 160)} />
+	{:else}
+		<title>Loading Product... | Njiani Electricals</title>
+	{/if}
+</svelte:head>
+
 {#if $productQuery.isLoading}
 	<div class="container mx-auto px-4 py-12 animate-pulse">
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -39,10 +48,6 @@
 	</div>
 {:else if $productQuery.data}
 	{@const product = $productQuery.data}
-	<svelte:head>
-		<title>{product.metaTitle || product.name} | Njiani Electricals</title>
-		<meta name="description" content={product.metaDescription || product.description.slice(0, 160)} />
-	</svelte:head>
 
 	<div class="container mx-auto px-4 py-8">
 		<!-- Breadcrumbs -->
