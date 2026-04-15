@@ -9,3 +9,4 @@ export * from './dto/order.dto';
 export * from './dto/auth.dto';
 
 export * from './constants/categories';
+export * from './utils';
