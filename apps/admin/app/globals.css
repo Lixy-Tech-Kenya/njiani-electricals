@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #1a1a2e;
+  --color-accent: #e94560;
+  --color-secondary: #f5a623;
+  --color-surface: #ffffff;
+  --color-border: #e2e8f0;
+  --color-muted: #64748b;
+  --color-bg: #f8fafc;
+  --color-sidebar: #1a1a2e;
+  --color-sidebar-text: #cbd5e1;
+  --color-sidebar-active: #e94560;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: #1e293b;
+}
