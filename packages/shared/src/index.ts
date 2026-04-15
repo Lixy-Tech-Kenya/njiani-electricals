@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 export * from './types/product';
 export * from './types/category';
 export * from './types/order';
