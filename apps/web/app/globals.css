@@ -12,3 +12,13 @@
   --color-muted: #64748b;
   --color-bg: #f8fafc;
 }
+
+html,
+body {
+  background-color: var(--color-bg);
+  color: #111827;
+}
+
+* {
+  box-sizing: border-box;
+}
