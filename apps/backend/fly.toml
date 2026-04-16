@@ -1,0 +1,48 @@
+# fly.toml — Njiani Electricals Backend (Fly.io)
+# Deploy: fly deploy --dockerfile Dockerfile (from apps/backend/)
+
+app = "njiani-backend"
+primary_region = "jnb"   # Johannesburg — closest free region to Kenya
+
+[build]
+  dockerfile = "Dockerfile"
+  # Build context must be the repo root (monorepo):
+  #   fly deploy --dockerfile apps/backend/Dockerfile --build-context .
+
+[env]
+  NODE_ENV    = "production"
+  PORT        = "3500"
+
+# Secrets (set via: fly secrets set KEY=value)
+# DATABASE_URL, REDIS_URL, JWT_SECRET,
+# CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET,
+# FRONTEND_URL, ADMIN_URL, SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM
+
+[[services]]
+  internal_port = 3500
+  protocol      = "tcp"
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port     = 443
+
+  [[services.ports]]
+    handlers = ["http"]
+    port     = 80
+    force_https = true
+
+  [services.concurrency]
+    type       = "requests"
+    hard_limit = 200
+    soft_limit = 150
+
+  [[services.http_checks]]
+    interval     = 30000
+    timeout      = 5000
+    grace_period = "10s"
+    method       = "GET"
+    path         = "/api/v1/health"
+
+[[vm]]
+  size   = "shared-cpu-1x"
+  memory = "256mb"

@@ -10,18 +10,28 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger('Bootstrap');
+  const isProd = process.env.NODE_ENV === 'production';
 
-  // Static Assets
+  // Static Assets (local uploads — dev only; prod uses Cloudinary)
   app.useStaticAssets(join(__dirname, '..', 'public'));
 
   // Security Headers
   app.use(helmet({
-    crossOriginResourcePolicy: { policy: "cross-origin" }
+    crossOriginResourcePolicy: { policy: isProd ? 'same-origin' : 'cross-origin' },
   }));
 
-  // CORS
+  // CORS — allow the configured front-ends; fail loudly if env vars missing in production
+  const allowedOrigins = [
+    process.env.FRONTEND_URL,
+    process.env.ADMIN_URL,
+  ].filter(Boolean) as string[];
+
+  if (isProd && allowedOrigins.length === 0) {
+    throw new Error('FRONTEND_URL and ADMIN_URL must be set in production');
+  }
+
   app.enableCors({
-    origin: [process.env.FRONTEND_URL || 'http://localhost:3501', process.env.ADMIN_URL || 'http://localhost:3502'],
+    origin: isProd ? allowedOrigins : ['http://localhost:3501', 'http://localhost:3502'],
     credentials: true,
   });
 
@@ -43,30 +53,27 @@ async function bootstrap() {
       whitelist: true,
       transform: true,
       forbidNonWhitelisted: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
+      transformOptions: { enableImplicitConversion: true },
     }),
   );
 
-  // Response Serialization
+  // Response Serialisation
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
-  // Swagger (Dev only)
-  if (process.env.NODE_ENV !== 'production') {
+  // Swagger (dev only)
+  if (!isProd) {
     const config = new DocumentBuilder()
       .setTitle('Njiani Electricals API')
-      .setDescription('The Njiani Electricals Online Marketplace API description')
+      .setDescription('Njiani Electricals Online Marketplace API')
       .setVersion('1.0')
       .addBearerAuth()
       .build();
-    const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api/docs', app, document);
+    SwaggerModule.setup('api/docs', app, SwaggerModule.createDocument(app, config));
+    logger.log(`Swagger UI: http://localhost:${process.env.PORT ?? 3500}/api/docs`);
   }
 
-  const port = process.env.PORT || 3500;
-  await app.listen(port);
-  logger.log(`Application is running on: http://localhost:${port}`);
-  logger.log(`Swagger UI is available on: http://localhost:${port}/api/docs`);
+  const port = process.env.PORT ?? 3500;
+  await app.listen(port, '0.0.0.0');
+  logger.log(`Application running on port ${port}`);
 }
 bootstrap();
