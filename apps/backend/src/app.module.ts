@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { MailerModule } from '@nestjs-modules/mailer';
@@ -28,12 +28,18 @@ import { CartModule } from './cart/cart.module';
     CacheModule.registerAsync({
       isGlobal: true,
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        store: await redisStore({
-          url: configService.get('REDIS_URL') || 'redis://localhost:6379',
-          ttl: 600000, // 10 minutes default
-        }),
-      }),
+      useFactory: async (configService: ConfigService) => {
+        const url = configService.get<string>('REDIS_URL') ?? 'redis://localhost:6380';
+        try {
+          const store = await redisStore({ url, socket: { connectTimeout: 2000 } });
+          await store.client.ping(); // throws immediately if Redis isn't reachable
+          Logger.log(`Redis cache connected (${url})`, 'CacheModule');
+          return { store, ttl: 600_000 };
+        } catch {
+          Logger.warn('Redis unavailable — falling back to in-memory cache', 'CacheModule');
+          return { ttl: 600_000 };
+        }
+      },
       inject: [ConfigService],
     }),
     MailerModule.forRootAsync({

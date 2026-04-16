@@ -3,13 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm --parallel -r dev",
+    "dev": "pnpm infra:up && pnpm --parallel -r dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "test": "pnpm -r test",
-    "db:migrate": "pnpm --filter backend prisma migrate dev",
-    "db:seed": "pnpm --filter backend prisma db seed",
-    "db:studio": "pnpm --filter backend prisma studio"
+    "db:migrate": "pnpm --filter @njiani/backend prisma migrate dev",
+    "db:seed": "pnpm --filter @njiani/backend db:seed",
+    "db:studio": "pnpm --filter @njiani/backend prisma studio",
+    "infra:up": "docker compose -f infra/docker-compose.yml up -d",
+    "infra:down": "docker compose -f infra/docker-compose.yml down",
+    "infra:logs": "docker compose -f infra/docker-compose.yml logs -f"
   },
   "devDependencies": {
     "typescript": "^5.0.0"
