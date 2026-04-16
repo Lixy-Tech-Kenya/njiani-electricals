@@ -20,8 +20,7 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
     throw new ApiError(res.status, error.message ?? `Request failed: ${res.status}`);
   }
 
-  const json = await res.json();
-  return (json?.data ?? json) as T;
+  return res.json() as Promise<T>;
 }
 
 export interface ProductsParams {

@@ -38,6 +38,9 @@ async function main() {
   console.log(`✓ ${PRODUCT_CATEGORIES.length} categories seeded`);
 
   // ─── 3. Sample products ─────────────────────────────────────────────────────
+  const UNS = 'https://images.unsplash.com/photo';
+  const imgOpts = 'w=900&q=80&auto=format&fit=crop';
+
   const sampleProducts = [
     // Featured (first 4)
     {
@@ -48,6 +51,7 @@ async function main() {
       description:
         'Elegant 24-head crystal chandelier for modern dining rooms and living areas. Energy-efficient LED bulbs included. Ceiling mount kit provided.',
       isFeatured: true,
+      imageUrls: [`${UNS}-1558618666-fcd25c85cd64?${imgOpts}`],
     },
     {
       name: 'Solar Floodlight 100W with Remote',
@@ -57,6 +61,7 @@ async function main() {
       description:
         'High-brightness 100W solar floodlight with motion sensor and remote control. Automatic dusk-to-dawn operation. IP67 waterproof rating.',
       isFeatured: true,
+      imageUrls: [`${UNS}-1509391366360-2e959784a276?${imgOpts}`],
     },
     {
       name: 'LED Ceiling Light 36W Round',
@@ -66,6 +71,7 @@ async function main() {
       description:
         'Slim 36W LED ceiling light with cool white illumination. Flush mount design suitable for bedrooms, offices and corridors. No bulbs required.',
       isFeatured: true,
+      imageUrls: [`${UNS}-1565814329452-e1efa11c5b89?${imgOpts}`],
     },
     {
       name: 'Solar LED Streetlight 60W All-in-One',
@@ -75,6 +81,7 @@ async function main() {
       description:
         'All-in-one solar streetlight with built-in panel, battery and LED chip. Suitable for roads, parking lots and compounds. Auto on/off with motion sensing.',
       isFeatured: true,
+      imageUrls: [`${UNS}-1473341304170-971dccb5ac1e?${imgOpts}`],
     },
     // Non-featured
     {
@@ -85,6 +92,7 @@ async function main() {
       description:
         'Smart single-gang WiFi switch compatible with Alexa and Google Home. Requires neutral wire. Fits standard UK wall boxes.',
       isFeatured: false,
+      imageUrls: [`${UNS}-1486325212027-8081e485255e?${imgOpts}`],
     },
     {
       name: 'Weatherproof Outdoor Wall Light',
@@ -94,6 +102,7 @@ async function main() {
       description:
         'IP65-rated outdoor wall lantern for gates, verandas and compound entrances. Warm white E27 bulb socket. Powder-coated aluminium body.',
       isFeatured: false,
+      imageUrls: [`${UNS}-1565183928294-7063f23ce0f8?${imgOpts}`],
     },
     {
       name: 'Heavy Duty Extension Cable 5m (4-Way)',
@@ -103,6 +112,7 @@ async function main() {
       description:
         '5-metre 4-way extension cable with surge protection and individual switches per socket. 13A rated. Child safety shutters on all sockets.',
       isFeatured: false,
+      imageUrls: [`${UNS}-1497366216548-37526070297c?${imgOpts}`],
     },
     {
       name: 'LED Floodlight 50W (Cool White)',
@@ -112,6 +122,7 @@ async function main() {
       description:
         'Slim 50W LED floodlight for security lighting and sports courts. IP65 waterproof. Die-cast aluminium housing. 4500 lumens output.',
       isFeatured: false,
+      imageUrls: [`${UNS}-1544551763-46a013bb70d5?${imgOpts}`],
     },
     {
       name: 'Waterproof Double Socket (IP66)',
@@ -121,6 +132,7 @@ async function main() {
       description:
         'IP66-rated outdoor double socket with protective covers. Suitable for garages, bathrooms and outdoor kitchens. 13A, BS standard.',
       isFeatured: false,
+      imageUrls: [`${UNS}-1524593689594-aae2f26b75ab?${imgOpts}`],
     },
     {
       name: 'Rechargeable Emergency Lamp 30 LED',
@@ -130,15 +142,30 @@ async function main() {
       description:
         'Portable 30-LED rechargeable lamp with up to 8 hours backup. Wall-mount bracket included. Auto-activates during power outages.',
       isFeatured: false,
+      imageUrls: [`${UNS}-1519750157634-b6d493a0f77c?${imgOpts}`],
     },
   ];
+
+  // Patch legacy products from earlier seed runs that have placeholder images
+  const legacyImagePatches: { sku: string; imageUrls: string[] }[] = [
+    { sku: 'SW-002', imageUrls: [`${UNS}-1486325212027-8081e485255e?${imgOpts}`] }, // Smart WiFi Switch
+    { sku: 'SL-005', imageUrls: [`${UNS}-1509391366360-2e959784a276?${imgOpts}`] }, // Solar Floodlight 100W
+    { sku: 'EX-004', imageUrls: [`${UNS}-1497366216548-37526070297c?${imgOpts}`] }, // Heavy Duty Extension
+    { sku: 'OD-003', imageUrls: [`${UNS}-1565183928294-7063f23ce0f8?${imgOpts}`] }, // Outdoor Garden Light
+  ];
+  for (const patch of legacyImagePatches) {
+    await prisma.product.updateMany({
+      where: { sku: patch.sku },
+      data: { imageUrls: patch.imageUrls },
+    });
+  }
 
   let created = 0;
   for (const p of sampleProducts) {
     const slug = slugify(p.name, { lower: true, strict: true });
     await prisma.product.upsert({
       where: { sku: p.sku },
-      update: {},
+      update: { imageUrls: p.imageUrls },
       create: {
         name: p.name,
         sku: p.sku,
@@ -150,7 +177,7 @@ async function main() {
         isFeatured: p.isFeatured,
         stockQuantity: 50,
         lowStockThreshold: 5,
-        imageUrls: [],
+        imageUrls: p.imageUrls,
       },
     });
     created++;
