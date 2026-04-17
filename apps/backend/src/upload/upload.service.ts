@@ -40,8 +40,8 @@ export class UploadService {
 
     // Normalise to WebP at max 800×800 before uploading
     const processed = await sharp(file.buffer)
-      .resize(800, 800, { fit: 'inside', withoutEnlargement: true })
-      .webp({ quality: 80 })
+      .resize(1200, 1200, { fit: 'inside', withoutEnlargement: true })
+      .webp({ quality: 82 })
       .toBuffer();
 
     if (this.useCloudinary) {
@@ -54,7 +54,7 @@ export class UploadService {
     return new Promise((resolve, reject) => {
       cloudinary.uploader
         .upload_stream(
-          { folder: 'njiani-products', resource_type: 'image', format: 'webp' },
+          { folder: 'njiani-products', resource_type: 'image', format: 'webp', quality: 'auto:good' },
           (err: Error | undefined, result: UploadApiResponse | undefined) => {
             if (err || !result) return reject(err ?? new Error('Cloudinary upload failed'));
             resolve(result.secure_url);

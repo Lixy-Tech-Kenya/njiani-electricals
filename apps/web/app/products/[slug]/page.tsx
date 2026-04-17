@@ -51,7 +51,14 @@ export default async function ProductDetailPage({ params }: Props) {
         {/* Image */}
         <div className="relative aspect-square bg-gray-100 rounded-2xl overflow-hidden">
           {mainImage ? (
-            <Image src={mainImage} alt={product.name} fill className="object-cover" />
+            <Image
+              src={mainImage}
+              alt={product.name}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              priority
+            />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center text-gray-300 text-6xl">⚡</div>
           )}
