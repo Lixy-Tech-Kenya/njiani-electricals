@@ -1,57 +1,100 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <style>
-        body { font-family: sans-serif; line-height: 1.6; color: #333; }
-        .container { width: 100%; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px; }
-        .header { background: #1a1a2e; color: #fff; padding: 15px; text-align: center; border-radius: 6px 6px 0 0; }
-        .order-info { margin: 20px 0; }
-        .table { width: 100%; border-collapse: collapse; }
-        .table th, .table td { border-bottom: 1px solid #eee; padding: 10px; text-align: left; }
-        .footer { font-size: 12px; color: #777; margin-top: 30px; text-align: center; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Confirmation</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #f4f6f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #333; }
+    .wrapper { max-width: 600px; margin: 32px auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    .header { background: #1a1a2e; color: #fff; padding: 32px 40px; text-align: center; }
+    .header h1 { font-size: 24px; letter-spacing: -0.5px; }
+    .header p { color: rgba(255,255,255,0.6); font-size: 13px; margin-top: 4px; }
+    .badge { display: inline-block; background: #e94560; color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; margin-top: 12px; }
+    .body { padding: 36px 40px; }
+    .greeting { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
+    .intro { color: #666; font-size: 14px; line-height: 1.6; margin-bottom: 28px; }
+    .ref-box { background: #f8f9fa; border: 1px dashed #d1d5db; border-radius: 8px; padding: 16px 20px; margin-bottom: 28px; }
+    .ref-box p { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .ref-box span { font-size: 20px; font-weight: 800; color: #1a1a2e; letter-spacing: 1px; }
+    .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 12px; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 28px; }
+    th { text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #888; padding: 8px 12px; border-bottom: 2px solid #f0f0f0; }
+    td { padding: 12px; border-bottom: 1px solid #f5f5f5; font-size: 14px; }
+    .product-name { font-weight: 600; color: #1a1a2e; }
+    .total-row td { border-bottom: none; padding-top: 16px; }
+    .total-label { font-weight: 700; font-size: 15px; }
+    .total-value { font-weight: 800; font-size: 16px; color: #1a1a2e; }
+    .next-steps { background: #f0f7ff; border-left: 4px solid #1a1a2e; border-radius: 0 8px 8px 0; padding: 16px 20px; margin-bottom: 28px; }
+    .next-steps p { font-size: 13px; color: #444; line-height: 1.6; }
+    .footer { background: #f8f9fa; border-top: 1px solid #eee; padding: 24px 40px; text-align: center; }
+    .footer p { font-size: 12px; color: #999; line-height: 1.8; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Njiani Electricals</h1>
-        </div>
-        <p>Hello {{customerName}},</p>
-        <p>Thank you for your order! We have received your request and are currently processing it.</p>
-        
-        <div class="order-info">
-            <p><strong>Order Reference:</strong> {{referenceNumber}}</p>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Qty</th>
-                        <th>Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each order.items}}
-                    <tr>
-                        <td>{{productName}}</td>
-                        <td>{{quantity}}</td>
-                        <td>KES {{(unitPrice / 100)}}</td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="2"><strong>Total</strong></td>
-                        <td><strong>{{totalAmount}}</strong></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-        
-        <p>We will contact you shortly regarding delivery and payment details.</p>
-        
-        <div class="footer">
-            <p>&copy; 2024 Njiani Electricals Limited. All rights reserved.</p>
-        </div>
+  <div class="wrapper">
+    <div class="header">
+      <h1>⚡ Njiani Electricals</h1>
+      <p>Kenya's trusted electrical marketplace</p>
+      <span class="badge">Order Confirmed</span>
     </div>
+
+    <div class="body">
+      <p class="greeting">Hello {{customerName}},</p>
+      <p class="intro">
+        Thank you for your order! We have received your request and are currently reviewing it.
+        You'll hear from us soon to confirm availability and arrange delivery.
+      </p>
+
+      <div class="ref-box">
+        <p>Your Order Reference</p>
+        <span>{{referenceNumber}}</span>
+      </div>
+
+      <p class="section-title">Order Summary</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th style="text-align:center">Qty</th>
+            <th style="text-align:right">Unit Price</th>
+            <th style="text-align:right">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each items}}
+          <tr>
+            <td class="product-name">{{productName}}</td>
+            <td style="text-align:center">{{quantity}}</td>
+            <td style="text-align:right">{{unitPriceFormatted}}</td>
+            <td style="text-align:right">{{subtotalFormatted}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+        <tfoot>
+          <tr class="total-row">
+            <td colspan="3" class="total-label" style="text-align:right">Total</td>
+            <td class="total-value" style="text-align:right">{{totalAmount}}</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div class="next-steps">
+        <p>
+          We will reach out to confirm your order and discuss payment and delivery options.
+          Keep your reference number handy — you may need it when you contact us.
+        </p>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>
+        Questions? Call or WhatsApp us at <strong>+254 746 079 183</strong><br />
+        or email <strong>orders@njiani.co.ke</strong>
+      </p>
+      <p style="margin-top:12px">&copy; 2024 Njiani Electricals Limited. All rights reserved.</p>
+    </div>
+  </div>
 </body>
 </html>

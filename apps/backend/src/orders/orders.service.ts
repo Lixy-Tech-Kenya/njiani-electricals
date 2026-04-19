@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateOrderDto, UpdateOrderStatusDto, OrderStatus } from '@njiani/shared';
 import { OrderEntity } from '../common/entities';
 import { MailService } from '../mail/mail.service';
+import { WhatsAppService } from '../whatsapp/whatsapp.service';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
@@ -10,6 +11,7 @@ export class OrdersService {
   constructor(
     private prisma: PrismaService,
     private mailService: MailService,
+    private whatsApp: WhatsAppService,
   ) {}
 
   async create(createOrderDto: CreateOrderDto): Promise<OrderEntity> {
@@ -111,11 +113,34 @@ export class OrdersService {
       });
     });
 
-    // 5. Fire emails non-blocking
+    // 5. Fire email + WhatsApp notifications (non-blocking)
     const orderEntity = new OrderEntity(order);
-    this.mailService.sendOrderAlerts(orderEntity).catch(err => {
-      console.error('Failed to send order emails:', err);
-    });
+
+    this.mailService.sendOrderAlerts(orderEntity).catch(err =>
+      console.error('Failed to send order emails:', err),
+    );
+
+    const notifItems = orderItemsData.map(i => ({
+      productName: i.productName,
+      quantity: i.quantity,
+    }));
+
+    this.whatsApp.notifyCustomerOrderReceived({
+      phone: createOrderDto.customerPhone,
+      name: createOrderDto.customerName,
+      referenceNumber,
+      items: notifItems,
+      totalAmount,
+    }).catch(err => console.error('WhatsApp customer notify failed:', err));
+
+    this.whatsApp.notifyBusinessNewOrder({
+      customerName: createOrderDto.customerName,
+      customerPhone: createOrderDto.customerPhone,
+      referenceNumber,
+      channel: createOrderDto.channel,
+      items: notifItems,
+      totalAmount,
+    }).catch(err => console.error('WhatsApp business notify failed:', err));
 
     return orderEntity;
   }
@@ -165,7 +190,21 @@ export class OrdersService {
       data: { status: updateDto.status },
       include: { items: true },
     });
-    return new OrderEntity(order);
+    const entity = new OrderEntity(order);
+
+    // Notify customer via WhatsApp + email on every status change
+    this.whatsApp.notifyCustomerStatusUpdate({
+      phone: entity.customerPhone,
+      name: entity.customerName,
+      referenceNumber: entity.referenceNumber,
+      status: updateDto.status,
+    }).catch(err => console.error('WhatsApp status notify failed:', err));
+
+    this.mailService.sendStatusUpdate(entity).catch(err =>
+      console.error('Email status notify failed:', err),
+    );
+
+    return entity;
   }
 
   async getStats() {
