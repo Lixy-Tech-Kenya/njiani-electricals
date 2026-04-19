@@ -90,8 +90,8 @@ export const api = {
   products: {
     list: (query?: Record<string, string | number | boolean | undefined>) => 
       client.get<PaginatedResponse<Product>>('/products', { params: query }),
-    adminList: (query?: Record<string, string | number | boolean | undefined>) => 
-      client.get<PaginatedResponse<Product>>('/admin/products', { params: query }),
+    adminList: (query?: Record<string, string | number | boolean | undefined>) =>
+      client.get<PaginatedResponse<Product>>('/products', { params: query }),
     create: (data: CreateProductDto) => client.post<Product>('/products', data),
     update: (id: string, data: Partial<CreateProductDto>) => client.patch<Product>(`/products/${id}`, data),
     delete: (id: string) => client.delete<void>(`/products/${id}`),
@@ -105,7 +105,14 @@ export const api = {
   orders: {
     list: (query?: Record<string, string | number | boolean | undefined>) => 
       client.get<PaginatedResponse<Order>>('/orders/admin', { params: query }),
-    stats: () => client.get<{ totalOrders: number; totalRevenue: number; pendingOrders: number }>('/orders/admin/stats'),
+    stats: () => client.get<{
+      totalOrders: number;
+      pendingOrders: number;
+      totalProducts: number;
+      activeProducts: number;
+      outOfStockProducts: number;
+      recentOrders: Order[];
+    }>('/orders/admin/stats'),
     byId: (id: string) => client.get<Order>(`/orders/admin/${id}`),
     updateStatus: (id: string, data: UpdateOrderStatusDto) => 
       client.patch<Order>(`/orders/admin/${id}/status`, data),

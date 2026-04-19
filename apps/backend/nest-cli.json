@@ -2,16 +2,11 @@
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
-  "projects": {
-    "@njiani/backend": {
-      "type": "application",
-      "root": ".",
-      "entryFile": "main",
-      "sourceRoot": "src",
-      "compilerOptions": {
-        "tsConfigPath": "tsconfig.json",
-        "deleteOutDir": false
-      }
-    }
+  "compilerOptions": {
+    "tsConfigPath": "tsconfig.json",
+    "deleteOutDir": false,
+    "assets": [
+      { "include": "mail/templates/**/*.hbs", "watchAssets": true }
+    ]
   }
 }

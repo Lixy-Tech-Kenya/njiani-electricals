@@ -1,17 +1,10 @@
 @import 'tailwindcss';
 
-:root {
+@theme {
   --color-primary: #1a1a2e;
   --color-accent: #e94560;
   --color-accent-alt: #f5a623;
   --color-whatsapp: #25d366;
-}
-
-@theme {
-  --color-primary: var(--color-primary);
-  --color-accent: var(--color-accent);
-  --color-accent-alt: var(--color-accent-alt);
-  --color-whatsapp: var(--color-whatsapp);
 }
 
 body {

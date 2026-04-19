@@ -7,28 +7,27 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
-		"prepare": "svelte-kit sync || echo ''",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"check": "tsc --noEmit"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "^7.0.1",
-		"@sveltejs/kit": "^2.57.0",
-		"@sveltejs/vite-plugin-svelte": "^7.0.0",
 		"@tailwindcss/vite": "^4.2.2",
-		"svelte": "^5.55.2",
-		"svelte-check": "^4.4.6",
+		"@types/react": "^19.0.0",
+		"@types/react-dom": "^19.0.0",
+		"@vitejs/plugin-react": "^4.3.0",
 		"tailwindcss": "^4.2.2",
-		"typescript": "^6.0.2",
-		"vite": "^8.0.7"
+		"typescript": "^5.8.0",
+		"vite": "^6.3.0"
 	},
 	"dependencies": {
 		"@njiani/shared": "workspace:*",
-		"@tanstack/svelte-query": "^6.1.13",
-		"@tanstack/svelte-query-devtools": "^6.1.13",
+		"@tanstack/react-query": "^5.0.0",
+		"@tanstack/react-query-devtools": "^5.0.0",
 		"@tanstack/table-core": "^8.21.3",
 		"clsx": "^2.1.1",
-		"lucide-svelte": "^1.0.1",
+		"lucide-react": "^0.511.0",
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0",
+		"react-router": "^7.5.0",
 		"tailwind-merge": "^3.5.0"
 	}
 }

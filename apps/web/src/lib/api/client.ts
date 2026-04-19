@@ -7,7 +7,7 @@ import type {
   LoginDto
 } from '@njiani/shared';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3500/api/v1';
+const BASE_URL = (import.meta.env.VITE_API_URL as string) || 'http://localhost:3500/api/v1';
 
 export type PaginatedResponse<T> = {
   data: T[];
@@ -85,7 +85,7 @@ export const api = {
   client,
 
   products: {
-    list: (query?: ProductQueryDto) => client.get<PaginatedResponse<Product>>('/products', { params: query }),
+    list: (query?: ProductQueryDto) => client.get<PaginatedResponse<Product>>('/products', { params: query as Record<string, string | number | boolean | undefined> }),
     featured: () => client.get<Product[]>('/products/featured'),
     bySlug: (slug: string) => client.get<Product>(`/products/${slug}`),
   },
