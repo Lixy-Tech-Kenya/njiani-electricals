@@ -44,7 +44,7 @@ function CategoryForm({ form, setForm, onSubmit, submitting }: {
 }) {
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Name *</label>
           <input
@@ -75,7 +75,7 @@ function CategoryForm({ form, setForm, onSubmit, submitting }: {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Image URL</label>
           <input
@@ -175,14 +175,14 @@ export default function CategoriesPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-5 md:mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Categories</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Categories</h1>
           <p className="text-sm text-gray-400 mt-0.5">{categories.length} categories</p>
         </div>
         <button onClick={openCreate}
-          className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-colors shadow-lg shadow-primary/10">
-          <Plus size={16} /> New Category
+          className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-3 md:px-4 py-2.5 rounded-xl font-bold text-sm transition-colors shadow-lg shadow-primary/10">
+          <Plus size={16} /> <span className="hidden sm:inline">New </span>Category
         </button>
       </div>
 

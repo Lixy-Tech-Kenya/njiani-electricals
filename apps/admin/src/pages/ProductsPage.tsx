@@ -82,7 +82,7 @@ function ProductForm({
   return (
     <div className="space-y-5">
       {/* Basic */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Name *</label>
           <input
@@ -99,7 +99,7 @@ function ProductForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {field('slug', 'Slug *')}
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Category *</label>
@@ -111,7 +111,7 @@ function ProductForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Price (KES) *</label>
           <input type="number" min="0" value={form.price} onChange={e => setForm({ ...form, price: e.target.value })}
@@ -179,7 +179,7 @@ function ProductForm({
       </div>
 
       {/* Status + Featured */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Status</label>
           <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })}
@@ -292,14 +292,14 @@ export default function ProductsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-5 md:mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Products</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Products</h1>
           <p className="text-sm text-gray-400 mt-0.5">{data?.meta.total ?? '—'} total products</p>
         </div>
         <button onClick={openCreate}
-          className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-colors shadow-lg shadow-primary/10">
-          <Plus size={16} /> New Product
+          className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-3 md:px-4 py-2.5 rounded-xl font-bold text-sm transition-colors shadow-lg shadow-primary/10">
+          <Plus size={16} /> <span className="hidden sm:inline">New </span>Product
         </button>
       </div>
 
@@ -316,44 +316,49 @@ export default function ProductsPage() {
               <table className="w-full text-left">
                 <thead>
                   <tr className="border-b border-gray-100 bg-gray-50">
-                    {['', 'Name', 'SKU', 'Category', 'Price', 'Stock', 'Status', ''].map((h, i) => (
-                      <th key={i} className="py-3 px-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">{h}</th>
-                    ))}
+                    <th className="py-3 px-3 md:px-4 text-[10px] font-bold uppercase tracking-widest text-gray-400"></th>
+                    <th className="py-3 px-3 md:px-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">Name</th>
+                    <th className="py-3 px-3 md:px-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 hidden md:table-cell">SKU</th>
+                    <th className="py-3 px-3 md:px-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 hidden lg:table-cell">Category</th>
+                    <th className="py-3 px-3 md:px-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">Price</th>
+                    <th className="py-3 px-3 md:px-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 hidden sm:table-cell">Stock</th>
+                    <th className="py-3 px-3 md:px-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">Status</th>
+                    <th className="py-3 px-3 md:px-4"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {data.data.map(product => (
                     <tr key={product.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                      <td className="py-2 px-4 w-12">
-                        <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100">
+                      <td className="py-2 px-3 md:px-4 w-12">
+                        <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg overflow-hidden bg-gray-100">
                           {product.imageUrls[0] && <img src={product.imageUrls[0]} alt="" className="w-full h-full object-cover" />}
                         </div>
                       </td>
-                      <td className="py-2 px-4">
+                      <td className="py-2 px-3 md:px-4">
                         <div className="flex items-center gap-1.5">
                           <span className="font-medium text-sm">{product.name}</span>
                           {product.isFeatured && <Star size={12} className="text-yellow-400 fill-yellow-400 flex-shrink-0" />}
                         </div>
                       </td>
-                      <td className="py-2 px-4 font-mono text-xs text-gray-500">{product.sku}</td>
-                      <td className="py-2 px-4 text-sm text-gray-500">{product.category?.name ?? '—'}</td>
-                      <td className="py-2 px-4 text-sm font-bold">KES {(product.price / 100).toLocaleString()}</td>
-                      <td className="py-2 px-4 text-sm">
+                      <td className="py-2 px-3 md:px-4 font-mono text-xs text-gray-500 hidden md:table-cell">{product.sku}</td>
+                      <td className="py-2 px-3 md:px-4 text-sm text-gray-500 hidden lg:table-cell">{product.category?.name ?? '—'}</td>
+                      <td className="py-2 px-3 md:px-4 text-sm font-bold whitespace-nowrap">KES {(product.price / 100).toLocaleString()}</td>
+                      <td className="py-2 px-3 md:px-4 text-sm hidden sm:table-cell">
                         <span className={product.stockQuantity <= product.lowStockThreshold ? 'text-red-500 font-bold' : 'text-gray-700'}>
                           {product.stockQuantity}
                         </span>
                       </td>
-                      <td className="py-2 px-4">
-                        <span className={`text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full ${STATUS_STYLES[product.status]}`}>
+                      <td className="py-2 px-3 md:px-4">
+                        <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full whitespace-nowrap ${STATUS_STYLES[product.status]}`}>
                           {product.status.replace('_', ' ')}
                         </span>
                       </td>
-                      <td className="py-2 px-4">
+                      <td className="py-2 px-3 md:px-4">
                         <div className="flex gap-1">
-                          <button onClick={() => openEdit(product)} className="p-1.5 rounded-lg hover:bg-blue-50 hover:text-blue-600 text-gray-400 transition-colors">
+                          <button onClick={() => openEdit(product)} className="p-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 text-gray-400 transition-colors">
                             <Pencil size={15} />
                           </button>
-                          <button onClick={() => setDeleting(product)} className="p-1.5 rounded-lg hover:bg-red-50 hover:text-red-500 text-gray-400 transition-colors">
+                          <button onClick={() => setDeleting(product)} className="p-2 rounded-lg hover:bg-red-50 hover:text-red-500 text-gray-400 transition-colors">
                             <Trash2 size={15} />
                           </button>
                         </div>
