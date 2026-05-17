@@ -27,6 +27,8 @@ async function proxyFetch<T>(path: string, init?: RequestInit): Promise<T> {
   }
 
   const json = await res.json();
+  // Paginated responses include a `meta` object alongside `data` — return them intact.
+  if (json !== null && typeof json === 'object' && 'meta' in json) return json as T;
   return (json?.data ?? json) as T;
 }
 

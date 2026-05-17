@@ -112,10 +112,10 @@ export function ProductsTable() {
     columns,
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
-    pageCount: data?.meta.totalPages ?? 0,
+    pageCount: data?.meta?.totalPages ?? 0,
   });
 
-  const totalPages = data?.meta.totalPages ?? 1;
+  const totalPages = data?.meta?.totalPages ?? 1;
 
   return (
     <div className="space-y-4">
@@ -196,7 +196,7 @@ export function ProductsTable() {
         )}
 
         {/* Pagination */}
-        {(data?.meta.totalPages ?? 0) > 1 && (
+        {(data?.meta?.totalPages ?? 0) > 1 && (
           <div className="flex items-center justify-between px-6 py-4 border-t border-[var(--color-border)]">
             <p className="text-sm text-[var(--color-muted)]">
               Page {page} of {totalPages} · {data?.meta.total ?? 0} total

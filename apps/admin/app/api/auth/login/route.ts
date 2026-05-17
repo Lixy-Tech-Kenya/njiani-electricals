@@ -20,8 +20,7 @@ export async function POST(request: NextRequest) {
   }
 
   const data = await res.json();
-  // Backend returns { data: { token, user } }
-  const token: string = data?.data?.token ?? data?.token;
+  const token: string = data?.token ?? data?.access_token ?? data?.data?.token;
 
   if (!token) {
     return NextResponse.json({ message: 'No token returned from server' }, { status: 500 });
