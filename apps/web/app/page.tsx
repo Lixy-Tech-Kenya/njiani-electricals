@@ -4,6 +4,8 @@ import { api } from '@/lib/api/client';
 import { ProductCard } from '@/components/ProductCard';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Home',
   description: 'Shop electrical products online — LED lights, solar, cables & switches.',

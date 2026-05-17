@@ -4,6 +4,7 @@ import { ProductCard } from '@/components/ProductCard';
 import { ProductFilters } from './_components/ProductFilters';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Products' };
 
 interface Props {

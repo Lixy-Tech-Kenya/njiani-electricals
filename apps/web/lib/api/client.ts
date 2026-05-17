@@ -89,7 +89,7 @@ function createClient() {
 
   // ── Core verbs ────────────────────────────────────────────────────────────
   async function get<T>(path: string, init?: RequestInit): Promise<T> {
-    const res = await interceptor.run(path, { ...init, method: 'GET' });
+    const res = await interceptor.run(path, { cache: 'no-store', ...init, method: 'GET' });
     return res.json();
   }
 
