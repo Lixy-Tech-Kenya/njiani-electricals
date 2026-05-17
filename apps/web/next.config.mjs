@@ -2,6 +2,18 @@
 const nextConfig = {
   output: 'standalone',
   transpilePackages: ['@njiani/shared'],
+  async rewrites() {
+    return [
+      {
+        source: '/njianadmin',
+        destination: 'http://localhost:3502/njianadmin',
+      },
+      {
+        source: '/njianadmin/:path*',
+        destination: 'http://localhost:3502/njianadmin/:path*',
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },

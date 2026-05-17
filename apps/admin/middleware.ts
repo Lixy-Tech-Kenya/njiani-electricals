@@ -12,12 +12,15 @@ export function middleware(request: NextRequest) {
 
   // Authenticated user hitting /login → redirect to dashboard
   if (isPublic && token && pathname.startsWith('/login')) {
-    return NextResponse.redirect(new URL('/', request.url));
+    const home = request.nextUrl.clone();
+    home.pathname = '/';
+    return NextResponse.redirect(home);
   }
 
   // Unauthenticated user hitting a protected route → redirect to /login
   if (!isPublic && !token) {
-    const loginUrl = new URL('/login', request.url);
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = '/login';
     loginUrl.searchParams.set('from', pathname);
     return NextResponse.redirect(loginUrl);
   }
