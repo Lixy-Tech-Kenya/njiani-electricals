@@ -1,30 +1,28 @@
 import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import sharp from 'sharp';
+import { v4 as uuidv4 } from 'uuid';
 import { join } from 'path';
 import { promises as fs } from 'fs';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UploadService {
   private readonly logger = new Logger(UploadService.name);
-  private readonly useCloudinary: boolean;
+  private readonly supabase: SupabaseClient | null = null;
+  private readonly bucket: string;
   private readonly localUploadPath = join(process.cwd(), 'public', 'uploads');
 
   constructor(private readonly config: ConfigService) {
-    const cloudName = config.get<string>('CLOUDINARY_CLOUD_NAME');
-    this.useCloudinary = !!cloudName;
+    const url = config.get<string>('SUPABASE_URL');
+    const key = config.get<string>('SUPABASE_SERVICE_ROLE_KEY');
+    this.bucket = config.get<string>('SUPABASE_STORAGE_BUCKET') ?? 'product-images';
 
-    if (this.useCloudinary) {
-      cloudinary.config({
-        cloud_name: cloudName,
-        api_key: config.get<string>('CLOUDINARY_API_KEY'),
-        api_secret: config.get<string>('CLOUDINARY_API_SECRET'),
-      });
-      this.logger.log('Image storage: Cloudinary');
+    if (url && key) {
+      this.supabase = createClient(url, key);
+      this.logger.log('Image storage: Supabase Storage');
     } else {
-      this.logger.warn('CLOUDINARY_CLOUD_NAME not set — using local disk storage');
+      this.logger.warn('SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY not set — using local disk storage');
       this.ensureLocalDir();
     }
   }
@@ -38,30 +36,27 @@ export class UploadService {
       throw new BadRequestException('Only image files are allowed');
     }
 
-    // Normalise to WebP at max 800×800 before uploading
     const processed = await sharp(file.buffer)
       .resize(1200, 1200, { fit: 'inside', withoutEnlargement: true })
       .webp({ quality: 82 })
       .toBuffer();
 
-    if (this.useCloudinary) {
-      return this.uploadToCloudinary(processed);
+    if (this.supabase) {
+      return this.uploadToSupabase(processed);
     }
     return this.saveLocally(processed);
   }
 
-  private uploadToCloudinary(buffer: Buffer): Promise<string> {
-    return new Promise((resolve, reject) => {
-      cloudinary.uploader
-        .upload_stream(
-          { folder: 'njiani-products', resource_type: 'image', format: 'webp', quality: 'auto:good' },
-          (err: Error | undefined, result: UploadApiResponse | undefined) => {
-            if (err || !result) return reject(err ?? new Error('Cloudinary upload failed'));
-            resolve(result.secure_url);
-          },
-        )
-        .end(buffer);
-    });
+  private async uploadToSupabase(buffer: Buffer): Promise<string> {
+    const path = `products/${uuidv4()}.webp`;
+    const { error } = await this.supabase!.storage
+      .from(this.bucket)
+      .upload(path, buffer, { contentType: 'image/webp', upsert: false });
+
+    if (error) throw new Error(`Supabase upload failed: ${error.message}`);
+
+    const { data } = this.supabase!.storage.from(this.bucket).getPublicUrl(path);
+    return data.publicUrl;
   }
 
   private async saveLocally(buffer: Buffer): Promise<string> {

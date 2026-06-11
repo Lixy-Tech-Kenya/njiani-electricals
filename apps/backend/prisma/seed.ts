@@ -10,18 +10,20 @@ async function main() {
   console.log('🌱 Starting seed...');
 
   // ─── 1. Admin user ──────────────────────────────────────────────────────────
-  const passwordHash = await bcrypt.hash('Admin@2024', 10);
+  const adminEmail = process.env.ADMIN_EMAIL ?? 'admin@njiani.co.ke';
+  const adminPassword = process.env.ADMIN_PASSWORD ?? 'Admin@2024';
+  const passwordHash = await bcrypt.hash(adminPassword, 10);
   await prisma.user.upsert({
-    where: { email: 'admin@njiani.co.ke' },
+    where: { email: adminEmail },
     update: { passwordHash },
     create: {
-      email: 'admin@njiani.co.ke',
+      email: adminEmail,
       passwordHash,
       name: 'Njiani Admin',
       role: 'ADMIN',
     },
   });
-  console.log('✓ Admin user: admin@njiani.co.ke / Admin@2024');
+  console.log(`✓ Admin user: ${adminEmail} / ${adminPassword}`);
 
   // ─── 2. Categories (all 21) ─────────────────────────────────────────────────
   const categoryMap = new Map<string, string>();
@@ -646,7 +648,7 @@ async function main() {
   console.log(`✓ ${created} products seeded (${featuredCount} featured)`);
 
   console.log('\n🎉 Seed complete!');
-  console.log('   Admin login: admin@njiani.co.ke / Admin@2024');
+  console.log(`   Admin login: ${process.env.ADMIN_EMAIL ?? 'admin@njiani.co.ke'} / ${process.env.ADMIN_PASSWORD ?? 'Admin@2024'}`);
 }
 
 main()

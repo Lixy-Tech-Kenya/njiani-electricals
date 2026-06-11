@@ -11,7 +11,22 @@ export class MailService {
   ) {}
 
   async sendOrderAlerts(order: OrderEntity) {
-    const businessEmail = this.configService.get('BUSINESS_EMAIL');
+    const businessEmail = this.configService.get('ADMIN_EMAIL');
+
+    const formatKes = (cents: number) =>
+      (cents / 100).toLocaleString('en-KE', { style: 'currency', currency: 'KES' });
+
+    const formattedItems = (order.items ?? []).map(item => ({
+      ...item,
+      formattedUnitPrice: formatKes(item.unitPrice),
+    }));
+
+    const baseContext = {
+      order: { ...order, items: formattedItems },
+      customerName: order.customerName,
+      referenceNumber: order.referenceNumber,
+      totalAmount: formatKes(order.totalAmount),
+    };
 
     // 1. Send confirmation to customer (if email exists)
     if (order.customerEmail) {
@@ -19,12 +34,7 @@ export class MailService {
         to: order.customerEmail,
         subject: `Order Confirmation - ${order.referenceNumber}`,
         template: './order-confirmation',
-        context: {
-          order,
-          customerName: order.customerName,
-          referenceNumber: order.referenceNumber,
-          totalAmount: (order.totalAmount / 100).toLocaleString('en-KE', { style: 'currency', currency: 'KES' }),
-        },
+        context: baseContext,
       });
     }
 
@@ -33,12 +43,7 @@ export class MailService {
       to: businessEmail,
       subject: `New Order Alert - ${order.referenceNumber}`,
       template: './new-order-alert',
-      context: {
-        order,
-        customerName: order.customerName,
-        referenceNumber: order.referenceNumber,
-        totalAmount: (order.totalAmount / 100).toLocaleString('en-KE', { style: 'currency', currency: 'KES' }),
-      },
+      context: baseContext,
     });
   }
 }

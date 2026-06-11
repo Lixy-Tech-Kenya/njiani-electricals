@@ -47,15 +47,15 @@ import { HealthModule } from './health/health.module';
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
         transport: {
-          host: config.get('SMTP_HOST'),
-          port: config.get('SMTP_PORT'),
+          host: config.get('MAIL_HOST'),
+          port: config.get('MAIL_PORT'),
           auth: {
-            user: config.get('SMTP_USER'),
-            pass: config.get('SMTP_PASS'),
+            user: config.get('MAIL_USER'),
+            pass: config.get('MAIL_PASS'),
           },
         },
         defaults: {
-          from: config.get('SMTP_FROM'),
+          from: config.get('MAIL_FROM'),
         },
         template: {
           dir: join(__dirname, 'mail', 'templates'),

@@ -8,6 +8,7 @@
       "root": ".",
       "entryFile": "main",
       "sourceRoot": "src",
+      "assets": [{"include": "mail/templates/**/*.hbs", "watchAssets": true}],
       "compilerOptions": {
         "tsConfigPath": "tsconfig.json",
         "deleteOutDir": false

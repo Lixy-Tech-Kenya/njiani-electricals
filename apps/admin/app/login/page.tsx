@@ -23,7 +23,7 @@ export default function LoginPage() {
   async function onSubmit(values: LoginFormValues) {
     setServerError('');
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch('/njiani-admin/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),

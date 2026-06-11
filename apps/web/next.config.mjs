@@ -1,25 +1,25 @@
 /** @type {import('next').NextConfig} */
+const adminUrl = process.env.ADMIN_URL ?? 'http://localhost:3502';
+
 const nextConfig = {
-  output: 'standalone',
   transpilePackages: ['@njiani/shared'],
   async rewrites() {
     return [
       {
-        source: '/njianadmin',
-        destination: 'http://localhost:3502/njianadmin',
+        source: '/njiani-admin',
+        destination: `${adminUrl}/njiani-admin`,
       },
       {
-        source: '/njianadmin/:path*',
-        destination: 'http://localhost:3502/njianadmin/:path*',
+        source: '/njiani-admin/:path*',
+        destination: `${adminUrl}/njiani-admin/:path*`,
       },
     ];
   },
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
-      { protocol: 'https', hostname: 'res.cloudinary.com' },
+      { protocol: 'https', hostname: '*.supabase.co' },
       { protocol: 'http',  hostname: 'localhost', port: '3500', pathname: '/uploads/**' },
-      { protocol: 'https', hostname: '*.njiani.co.ke', pathname: '/uploads/**' },
     ],
   },
 };
