@@ -1,4 +1,4 @@
-import { IsString, IsPhoneNumber, IsEmail, IsOptional, IsEnum, IsArray, ValidateNested, IsInt, Min, Max, IsUUID, MinLength, ArrayMinSize } from 'class-validator';
+import { IsString, IsPhoneNumber, IsEmail, IsOptional, IsEnum, IsArray, ValidateNested, IsInt, Min, Max, IsUUID, MinLength, MaxLength, ArrayMinSize } from 'class-validator';
 import { Type } from 'class-transformer';
 import { OrderChannel, OrderStatus } from '../types/order';
 
@@ -27,12 +27,12 @@ export class CreateOrderDto {
 
   @IsString()
   @IsOptional()
-  @Max(200)
+  @MaxLength(200)
   customerLocation?: string;
 
   @IsString()
   @IsOptional()
-  @Max(500)
+  @MaxLength(500)
   notes?: string;
 
   @IsEnum(['WHATSAPP', 'EMAIL'])
