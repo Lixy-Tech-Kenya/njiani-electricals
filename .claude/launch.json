@@ -6,6 +6,21 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["--filter", "@njiani/web", "dev"],
       "port": 3501
+    },
+    {
+      "name": "admin",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@njiani/admin", "dev"],
+      "port": 3502
+    },
+    {
+      "name": "backend",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "railway run bash -c 'export NODE_ENV=development FRONTEND_URL=http://localhost:3501 ADMIN_URL=http://localhost:3502; cd apps/backend && pnpm exec nest start --watch'"
+      ],
+      "port": 3500
     }
   ]
 }

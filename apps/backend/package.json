@@ -20,7 +20,8 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "db:seed": "ts-node prisma/seed.ts",
-    "import:archer-catalogue": "ts-node prisma/import-archer-catalogue.ts"
+    "import:archer-catalogue": "ts-node prisma/import-archer-catalogue.ts",
+    "categorize:archer-catalogue": "ts-node prisma/categorize-archer-catalogue.ts"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.9.0",

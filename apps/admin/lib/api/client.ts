@@ -14,10 +14,15 @@ export class ApiError extends Error {
   }
 }
 
+// next.config.mjs sets basePath: '/njiani-admin'. fetch() calls to app-relative
+// paths aren't rewritten by Next automatically (unlike next/link or next/router),
+// so it must be prepended by hand or every proxied request 404s.
+const BASE_PATH = '/njiani-admin';
+
 async function proxyFetch<T>(path: string, init?: RequestInit): Promise<T> {
   // Strip leading /api/v1 if present, then route through the proxy
   const cleanPath = path.replace(/^\/api\/v1/, '').replace(/^\//, '');
-  const url = `/api/backend/${cleanPath}`;
+  const url = `${BASE_PATH}/api/backend/${cleanPath}`;
 
   const res = await fetch(url, init);
 

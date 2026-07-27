@@ -31,11 +31,13 @@ export function ProductsTable() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
+  const [status, setStatus] = useState('');
 
   const params: Record<string, string> = {
     page: String(page),
     limit: '20',
     ...(search ? { search } : {}),
+    ...(status ? { status } : {}),
   };
 
   const { data, isLoading } = useQuery({
@@ -131,22 +133,36 @@ export function ProductsTable() {
         </Link>
       </div>
 
-      {/* Search */}
-      <div className="relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-muted)]" />
-        <input
-          type="text"
-          placeholder="Search products…"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              setSearch(searchInput);
-              setPage(1);
-            }
+      {/* Search + Status filter */}
+      <div className="flex items-center gap-3">
+        <div className="relative max-w-sm flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-muted)]" />
+          <input
+            type="text"
+            placeholder="Search products…"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                setSearch(searchInput);
+                setPage(1);
+              }
+            }}
+            className="w-full pl-9 pr-4 py-2 text-sm rounded-lg border border-[var(--color-border)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent"
+          />
+        </div>
+        <select
+          value={status}
+          onChange={(e) => {
+            setStatus(e.target.value);
+            setPage(1);
           }}
-          className="w-full pl-9 pr-4 py-2 text-sm rounded-lg border border-[var(--color-border)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent"
-        />
+          className="py-2 px-3 text-sm rounded-lg border border-[var(--color-border)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent"
+        >
+          <option value="">Active</option>
+          <option value="INACTIVE">Inactive</option>
+          <option value="OUT_OF_STOCK">Out of stock</option>
+        </select>
       </div>
 
       {/* Table */}
