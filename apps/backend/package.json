@@ -24,6 +24,7 @@
     "categorize:archer-catalogue": "ts-node prisma/categorize-archer-catalogue.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1116.0",
     "@nestjs-modules/mailer": "^1.9.0",
     "@nestjs/cache-manager": "^3.1.0",
     "@nestjs/common": "^10.0.0",
@@ -40,7 +41,6 @@
     "cache-manager-redis-yet": "^5.1.5",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
-    "@supabase/supabase-js": "^2.0.0",
     "cookie-parser": "^1.4.6",
     "csurf": "^1.11.0",
     "handlebars": "^4.7.7",
